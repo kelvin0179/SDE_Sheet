@@ -171,7 +171,7 @@ int maxSubArray(vector<int>& c)
 }
 ```
 
-### 5.Merge Overlapping Subintervals
+### 5. [Merge Overlapping Subintervals](https://leetcode.com/problems/merge-intervals/)
 
 * This is a very cool Sorting and Searching Problem.
 * From an index we can take the right point and check how many left points after that index comes before it.
