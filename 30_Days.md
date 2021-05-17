@@ -1,6 +1,6 @@
 # Day_1
 
-### 1. Sort an array of 0’s 1’s 2’s without using extra space or sorting algo
+### 1. [Sort an array of 0’s 1’s 2’s without using extra space or sorting algo](https://leetcode.com/problems/sort-colors/)
 
 * The Idea is to Swap all the 0's to the left.
 * Then Swap all the 2's to the right , going from behind.
@@ -27,7 +27,7 @@ void sortColors(vector<int>& nums) {
     }
 ```
 
-### 2. Repeat and Missing Number
+### 2. [Repeat and Missing Number](https://practice.geeksforgeeks.org/problems/find-missing-and-repeating/0)
 
 * The Idea is that if a number repeats twice then the XOR of all the elements will cancel out that repeating number.
 * We can take that result and XOR it to numbers from (1-n) , Since thats the given range.
@@ -80,7 +80,7 @@ int findDuplicate(vector<int>& c)
 }
 ```
 
-### 3. Merge two sorted Arrays without extra space 
+### 3. [Merge two sorted Arrays without extra space](https://practice.geeksforgeeks.org/problems/merge-two-sorted-arrays-1587115620/1)
 
 * The is an Algorithm which is called INDEX-GAP.
 * This takes a gap of two-pointer of `ceil(size/2)` and by imagining both the arrays connected we implement on this gap.
@@ -140,7 +140,7 @@ void merge(long long c1[], long long c2[], int n, int m)
 }
 ```
 
-### 4. Kadane’s Algorithm 
+### 4. [Kadane’s Algorithm](https://leetcode.com/problems/maximum-subarray/) 
 
 * This is very basic DP where we take the sum of the array.
 * While doing so if the sum of the current index is less than the value at the current index , we take the array value as sum at that index.
