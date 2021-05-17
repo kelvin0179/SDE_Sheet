@@ -1,6 +1,9 @@
 # Day_1
 
 ### 1. Sort an array of 0’s 1’s 2’s without using extra space or sorting algo
+
+* The Idea is to Swap all the 0's to the left.
+* Then Swap all the 2's to the right , going from behind.
 ```
 void sortColors(vector<int>& nums) {
         int f=0;
@@ -23,5 +26,7 @@ void sortColors(vector<int>& nums) {
         }
     }
 ```
-* The Idea is to Swap all the 0's to the left.
-* Then Swap all the 2's to the right , going from behind.
+
+### 2. Repeat and Missing Number
+
+
