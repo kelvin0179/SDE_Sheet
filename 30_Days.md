@@ -245,8 +245,12 @@ vector<vector<int>> merge(vector<vector<int>>& c)
 ### 6. [Find the duplicate in an array of N+1 integers](https://leetcode.com/problems/find-the-duplicate-number/)
 
 * This one is very tricky because of the constant space constraint.
-* We iterate inside the indexes , meaning i=c[i].
-* We take two type of pointers Fast and Slow
+* We iterate inside the indexes , meaning `i=c[i]`.
+* We take two type of pointers Fast and Slow.
+* In Fast we do 2 steps forward `i=c[c[i]]` and in Slow we do `i=c[i]`.
+* When Both Strike a common point stop.
+* Now change the position of Fast to `i=0`and the do one step iteration on both Slow and Fast.
+* Again when they strike a common point that index is the answer.
 
 ```
 int findDuplicate(vector<int>& c) 
