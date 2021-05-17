@@ -79,3 +79,63 @@ int findDuplicate(vector<int>& c)
         return rightXor;
 }
 ```
+
+### 3. Merge two sorted Arrays without extra space 
+
+* The is an Algorithm which is called INDEX-GAP.
+* This takes a gap of two-pointer of `ceil(size/2)` and by imagining both the arrays connected we implement on this gap.
+* The implementation is that if the element on the left is bigger than the right then we swap.
+* After one full iteration we decrease the gap size by `ceil(gap/2)`.
+* We do this until size of gap = 1.
+* After all this steps the two are sorted.
+
+```
+void merge(long long c1[], long long c2[], int n, int m) 
+{ 
+    int sz1=n+m;
+    int sz=sz1;
+    while(sz>1)
+    {
+        int mid=(sz/2);
+        if(sz&1)
+            mid++;
+        
+        int l=0,r=mid;
+        while(r<sz1)
+        {
+            int templ,tempr;
+            bool f1,f2;
+            if(l<n)
+                templ=l,f1=0;
+            else
+                templ=l-n,f1=1;
+            if(r<n)
+                tempr=r,f2=0;
+            else
+                tempr=r-n,f2=1;
+            if(!f1 and !f2)
+            {
+                if(c1[templ]>c1[tempr])
+                    swap(c1[templ],c1[tempr]);
+            }
+            if(!f1 and f2)
+            {
+                if(c1[templ]>c2[tempr])
+                    swap(c1[templ],c2[tempr]);
+            }
+            if(f1 and !f2)
+            {
+                if(c2[templ]>c1[tempr])
+                    swap(c2[templ],c1[tempr]);
+            }
+            if(f1 and f2)
+            {
+                if(c2[templ]>c2[tempr])
+                    swap(c2[templ],c2[tempr]);
+            }
+            l++,r++;
+        }
+        sz=mid;
+    }
+}
+```
