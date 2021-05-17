@@ -170,3 +170,74 @@ int maxSubArray(vector<int>& c)
     return ma;
 }
 ```
+
+### 5.Merge Overlapping Subintervals
+
+* This is a very cool Sorting and Searching Problem.
+* From an index we can take the right point and check how many left points after that index comes before it.
+* Then for all those points we can just take out the maximum right point , then we have a connected interval.
+* Sort The array first and the for finding points use Binary Search.
+
+```
+vector<vector<int>> merge(vector<vector<int>>& c) 
+{
+    int n=c.size();
+    vector<vector<int>> ans;
+    vector<pair<int,int>> p(n);
+    for(int i=0;i<n;i++)
+    {
+        p[i].first=c[i][0];
+        p[i].second=c[i][1];
+    }
+    sort(p.begin(),p.end());
+    int i=0;
+    auto it1=p.begin();
+    while(i<n)
+    {
+        pair<int,int> pa={p[i].second,1e9};
+        auto it=upper_bound(p.begin(), p.end(),pa);
+        if(it!=it1)
+            it--;
+        else
+        {
+            i++;
+            continue;
+        }
+        int j=it-p.begin(),ma=0;
+        while(j>=i)
+        {
+            ma=max(ma,p[j].second);
+            j--;
+        }
+        j=i;
+        while(j<=(it-p.begin()))
+        {
+            p[j].first=p[i].first;
+            p[j].second=ma;
+            j++;
+        }
+        i=it-p.begin();
+        it1=it;
+        it1++;
+    }
+    for(int i=n-1;i>=1;i--)
+    {
+        if(p[i].first==p[i-1].first)
+            p[i-1].second=p[i].second;
+    }
+    for(int i=0;i<n;i++)
+    {
+        vector<int> t(2);
+        t[0]=p[i].first;
+        t[1]=p[i].second;
+        if(ans.empty())
+            ans.push_back(t);
+        else
+        {
+            if(ans.back()!=t)
+                ans.push_back(t);
+        }
+    }
+    return ans;
+}
+```
