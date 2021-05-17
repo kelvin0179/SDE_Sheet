@@ -139,3 +139,34 @@ void merge(long long c1[], long long c2[], int n, int m)
     }
 }
 ```
+
+### 4. Kadane’s Algorithm 
+
+* This is very basic DP where we take the sum of the array.
+* While doing so if the sum of the current index is less than the value at the current index , we take the array value as sum at that index.
+
+```
+int maxSubArray(vector<int>& c)
+{
+    int n=c.size();
+    vector<int> sum(n,0);
+    sum[0]=c[0];
+    int ma=c[0];
+    for(int i=1;i<n;i++)
+    {
+        if(sum[i-1]+c[i]>c[i])
+            sum[i]=sum[i-1]+c[i];
+        else
+            sum[i]=c[i];
+        ma=max(ma,sum[i]);
+    }
+    if(ma==0)
+    {   ma=c[0];
+        for(int i=1;i<n;i++)
+        {
+            ma=max(ma,c[i]);
+        }
+    }
+    return ma;
+}
+```
