@@ -272,3 +272,228 @@ int findDuplicate(vector<int>& c)
     return slowPointer;
 }
 ```
+
+# Day_2
+
+### 1. [Set Matrix Zeros](https://leetcode.com/problems/set-matrix-zeroes/) 
+
+* We can create two dummy array one row wise and one column wise inside the matrix.
+* Before that for the decision of index 0,0 we should precalculate that , does the array we are considering dummy have zeros or not. 
+* Traverse from index 1,1 and on encounter with zero keep marking the dummy array as zero at the index which is required.
+* Then Traverse again from 1,1 and keep making zero according to the index of the dummy array.
+
+```
+void setZeroes(vector<vector<int>>& c) 
+{
+    bool col=false,row=false;
+    int n=c.size();
+    int m=c[0].size();
+    for(int i=0;i<n;i++)
+    {
+        if(c[i][0]==0)
+            row=true;
+    }
+    for(int i=0;i<m;i++)
+    {
+        if(c[0][i]==0)
+            col=true;
+    }
+    for(int i=1;i<n;i++)
+    {
+        for(int j=1;j<m;j++)
+        {
+            if(c[i][j]==0)
+            {
+                c[i][0]=0;
+                c[0][j]=0;
+            }
+        }
+    }
+    for(int i=1;i<n;i++)
+    {
+        for(int j=1;j<m;j++)
+        {
+            if(c[i][0]==0 or c[0][j]==0)
+                c[i][j]=0;
+        }
+    }
+    for(int i=0;i<n;i++)
+    {
+        if(row)
+            c[i][0]=0;
+    }
+    for(int i=0;i<m;i++)
+    {
+        if(col)
+            c[0][i]=0;
+    }
+}
+```
+
+### 2. [Pascal Triangle](https://leetcode.com/problems/pascals-triangle/)
+
+* This is based on a simple DP solution which is shown in the diagram of the question.
+
+```
+vector<vector<int>> generate(int n) 
+{
+    vector<vector<int>> ans;
+    ans.push_back({1});
+    vector<int> t;
+    for(int i=1;i<n;i++)
+    {
+        t.push_back(1);
+        for(int j=0;j<ans[i-1].size()-1;j++)
+        {
+            t.push_back(ans[i-1][j]+ans[i-1][j+1]);
+        }
+        t.push_back(1);
+        ans.push_back(t);
+        t.clear();
+    }
+    return ans;
+}
+```
+
+### 3. [Next Permutation](https://leetcode.com/problems/next-permutation/)
+
+* Following the rules of lexographical arrangement we go from behind and check at what point the array becomes decreasing.
+* Then we must find the next gretest element from that element in the range of `pointIndex+1 , endPoint`.
+* Swap the two elements and sort the same range mentioned above.
+
+```
+void nextPermutation(vector<int>& c) 
+{
+    int n=c.size();
+    for(int i=n-1;i>0;i--)
+    {
+        if(c[i]>c[i-1])
+        {
+            for(int j=n-1;j>=i;j--)
+            {
+                if(c[j]>c[i-1])
+                {
+                    swap(c[j],c[i-1]);
+                    break;
+                }
+            }
+            sort(c.begin()+i,c.end());
+            return;
+        }
+    }
+    sort(c.begin(), c.end());
+}
+```
+
+### 4. [Inversion of Array (Using Merge Sort)](https://practice.geeksforgeeks.org/problems/inversion-of-array-1587115620/1)
+
+* The Logic is to observer how we can calculate inversion between two sorted arrays.
+* Let's say for every element of the first array we want to find how many elements are there less than in the second array.
+* So inversion for each element would be `I = mergedArray.size()-firstArray[currentIndex]`.
+* Using mergeSort we always get to compare sorted arrays in the merge funtion.
+* Count the inversion globally and return.
+
+```
+vector<long long> left1,right1,merged;
+long long int inversions=0;
+void merge(long long *c)
+{
+    int i=0,j=0;
+    int n=left1.size();
+    int m=right1.size();
+    int sz;
+    while(i<n or j<m)
+    {
+        if(j==m)
+        {
+            sz=merged.size();
+            if(!merged.empty())
+                inversions+=(sz-i);
+            merged.push_back(left1[i]);
+            i++;
+        }
+        else if(i==n)
+        {
+            merged.push_back(right1[j]);
+            j++;
+        }
+        else
+        {
+            if(right1[j]<left1[i])
+            {
+                merged.push_back(right1[j]);
+                j++;
+            }
+            else
+            {
+                sz=merged.size();
+                if(!merged.empty())
+                    inversions+=(sz-i);
+                merged.push_back(left1[i]);
+                i++;
+            }
+        }
+    }
+}
+void mergeSort(long long *c,int l,int r)
+{
+    if(l==r)
+        return;
+    int mid=(l+r)/2;
+    mergeSort(c,l,mid);
+    mergeSort(c,mid+1,r);
+    left1.assign(c+l,c+mid+1);
+    right1.assign(c+mid+1,c+r+1);
+    merge(c);
+    for(int i=r;i>=l;i--)
+    {
+        c[i]=merged.back();
+        merged.pop_back();
+    }
+    left1.clear();
+    right1.clear();
+}
+long long int inversionCount(long long c[], long long n)
+{
+    mergeSort(c,0,n-1);
+    return inversions;
+}
+```
+
+### 5. [Stock Buy and Sell](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
+
+* The only thing we want is the maximun difference between an element ans any element appearing after it.
+* For every iteration we go from back and start by assuming the last element as the max value.
+* Then for every upcoming element we store the maximum difference until an element greater than the max value appears.
+* In this case we update the maximum and proceed as same.
+
+```
+int maxProfit(vector<int>& c)
+{
+    int n=c.size();
+    int i=n-1;
+    int diff=0,maxPos=n-1;
+    while(i>=0)
+    {
+        while(i>=0 and c[maxPos]==max(c[i],c[maxPos]))
+        {
+            diff=max(diff,abs(c[i]-c[maxPos]));
+            i--;
+        }
+        maxPos=i;
+    }
+    return diff;
+}
+```
+### Another Variation
+
+* Another Variation of this problem is that we can be given the difference between every two elements and be asked to find the same.
+* The observation is that every subarray in the array of elements **Not Differences** where the endpoints of the sub array are max and min makes up the entire array.
+* Eg (2....5 1....7 3....6).
+* So no matter what the elements are between these subarrays , since we know the endpoints are max and min , the sum of differnce of a subarray will be `max-min`.
+* As soon as we go from one subarray to another and the fst elt of the second subarray is less the fst elt of first subarray , the sum of difference will go below zero.
+* Eg Subarr `1` and `2`.
+* And if the other way around then scnd elt of the second subarray will take difference from fst elt of first subarray as the resulting sum of difference.
+* So here a **Kadane's Algorithm** will do the trick.
+
+### 6.[]()
