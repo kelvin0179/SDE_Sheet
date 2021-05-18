@@ -389,7 +389,7 @@ void nextPermutation(vector<int>& c)
 
 * The Logic is to observer how we can calculate inversion between two sorted arrays.
 * Let's say for every element of the first array we want to find how many elements are there less than in the second array.
-* So inversion for each element would be `I = mergedArray.size()-firstArray[currentIndex]`.
+* So inversion for each element would be `I = mergedArray.size()-firstArrayCurrentIndex`.
 * Using mergeSort we always get to compare sorted arrays in the merge funtion.
 * Count the inversion globally and return.
 
@@ -496,4 +496,84 @@ int maxProfit(vector<int>& c)
 * And if the other way around then scnd elt of the second subarray will take difference from fst elt of first subarray as the resulting sum of difference.
 * So here a **Kadane's Algorithm** will do the trick.
 
-### 6.[]()
+### 6. [Rotate Matrix](https://leetcode.com/problems/rotate-image/)
+
+* This is Medium and the first thought would be a very well implemented recurrsive brute force ,  which I did , but turns out the question was observational
+
+* My Code
+```
+int n;
+void rotation(vector<vector<int>>& c,int pi,int pj,int i,int j,int start,int ending)
+{
+    if(i==start and j==start)
+        return;
+    swap(c[i][j],c[pi][pj]);
+    if(j==start and i<ending-1)
+        rotation(c,i,j,i+1,j,start,ending);
+    else if(i==ending-1)
+    {
+        if(j==ending-1)
+            rotation(c,i,j,i-1,j,start,ending);
+        else
+            rotation(c,i,j,i,j+1,start,ending);
+    }
+    else if(j==ending-1)
+    {
+        if(i==start)
+            rotation(c,i,j,i,j-1,start,ending);
+        else
+            rotation(c,i,j,i-1,j,start,ending);
+    }
+    else
+        rotation(c,i,j,i,j-1,start,ending);
+}
+void rotate(vector<vector<int>>& c)
+{
+    n=c.size();
+    int sz=n;
+    int i=1,j=0,up=0,low=n;
+    for(int x=0;x<(n/2);x++)
+    {
+        int sz1=sz-1;
+        for(int y=0;y<sz1;y++)
+            rotation(c,i-1,j,i,j,up,low);
+        up++,low--;
+        i++,j++;
+        sz-=2;
+    }
+}
+```
+* It turns out we just had to reverse the array vertically and swap the diagonal elements.
+* Author's Code
+```
+/*
+ * clockwise rotate
+ * first reverse up to down, then swap the symmetry 
+ * 1 2 3     7 8 9     7 4 1
+ * 4 5 6  => 4 5 6  => 8 5 2
+ * 7 8 9     1 2 3     9 6 3
+*/
+void rotate(vector<vector<int> > &matrix) {
+    reverse(matrix.begin(), matrix.end());
+    for (int i = 0; i < matrix.size(); ++i) {
+        for (int j = i + 1; j < matrix[i].size(); ++j)
+            swap(matrix[i][j], matrix[j][i]);
+    }
+}
+
+/*
+ * anticlockwise rotate
+ * first reverse left to right, then swap the symmetry
+ * 1 2 3     3 2 1     3 6 9
+ * 4 5 6  => 6 5 4  => 2 5 8
+ * 7 8 9     9 8 7     1 4 7
+*/
+void anti_rotate(vector<vector<int> > &matrix) {
+    for (auto vi : matrix) reverse(vi.begin(), vi.end());
+    for (int i = 0; i < matrix.size(); ++i) {
+        for (int j = i + 1; j < matrix[i].size(); ++j)
+            swap(matrix[i][j], matrix[j][i]);
+    }
+}
+```
+* The Asymtotic Complexity of both is **O(N^2)** but the author's code is very of very less lines.
