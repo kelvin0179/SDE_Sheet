@@ -580,4 +580,213 @@ void anti_rotate(vector<vector<int> > &matrix) {
 
 # Day_3
 
-### 1. []()
+### 1. [Search in a 2D matrix](https://leetcode.com/problems/search-a-2d-matrix/)
+
+* The solution is pretty intuitive , as we can assume the whole matrix as a single list and perform Binary Search.
+* We just have to manage the indexes when updating left and right.
+
+```
+bool searchMatrix(vector<vector<int>>& c, int target)
+{
+    int n=c.size();
+    int m=c[0].size();
+    int l=0,r=(m*n)-1;
+    while(r-l>1)
+    {
+        int mid=(l+r)/2;
+        if(c[mid/m][mid%m]>=target)
+            r=mid;
+        else
+            l=mid+1;
+    }
+    if(c[l/m][l%m]==target or c[r/m][r%m]==target)
+        return 1;
+    return 0;
+}
+```
+
+### 2. [Pow(x, n)](https://leetcode.com/problems/powx-n/)
+
+* There is a pretty trivial alogorithm which performs **raise to the power** in `log n` time where `n` is the power.
+* If the power is negative then just calculate for the positive power and reciprocate it.
+
+```
+double power(double x,long long n)
+{
+    double ans=1;
+    while(n>=1)
+    {
+        ans*=(n%2==0?1:x);
+        x=(x*x);
+        n/=2;
+    }
+    return ans;
+}
+double myPow(double x, int n) 
+{
+    long long n1=n;
+    if(n1>0)
+        return power(x,n1);
+    else
+        return 1/power(x,-n1);
+}
+```
+
+### 3. [Majority Element](https://leetcode.com/problems/majority-element/)
+
+* There is a very unique algorithm call **Moore's Voting**.
+* Here we assume the first element as the max and increment counter on its appearance and decrement when another element is found.
+* This idea is when the element is appearing `ceil(n/2)` times then the last element with the positve frequency count will be the answer.
+* Since it is guaranted that the answer exists this always works.
+
+```
+int majorityElement(vector<int>& c) 
+{
+    int freq=0,maxEle,i=0;
+    while(i<c.size())
+    {
+        if(freq==0)
+            maxEle=c[i];
+        if(c[i]==maxEle)
+            freq++;
+        else
+            freq--;
+        i++;
+    }
+    return maxEle;
+}
+```
+
+### 4. [Majority Element II](https://leetcode.com/problems/majority-element-ii/)
+
+* The same algorithm as above with a slight tweak.
+* First observation is that the answer can be no more than 2 elements.
+* Let the first two different elements be assigned as maximums and the freqency decrement of these two element does not affect one another.
+* Do this till the end and lastly when two elements are found , do a final check in the array and return as a vector.
+
+```
+vector<int> majorityElement(vector<int>& c) 
+{
+    int n=c.size();
+    int ct1=0,ct2=0;
+    int ele1=-1,ele2=-1;
+    int i=0;
+    while(i<n)
+    {
+        if(c[i]==ele1)
+            ct1++;
+        else if(c[i]==ele2)
+            ct2++;
+        else if(ct1==0)
+        {
+            ele1=c[i];
+            ct1++;
+        }
+        else if(ct2==0)
+        {
+            ele2=c[i];
+            ct2++;
+        }
+        else
+            ct1--,ct2--;
+        i++;
+    }
+    ct1=0,ct2=0,i=0;
+    while(i<n)
+    {
+        if(c[i]==ele1)
+            ct1++;
+        if(c[i]==ele2)
+            ct2++;
+        i++;
+    }
+    vector<int> ans;
+    if(ct1>(n/3))
+        ans.push_back(ele1);
+    if(ct2>(n/3))
+        ans.push_back(ele2);
+    if(ele1==ele2 and ans.size()==2)
+        ans.pop_back();
+    return ans;
+}
+```
+
+### 5. [Unique Paths](https://leetcode.com/problems/unique-paths/)
+
+* Because the problem reeks of DP don't go straight for it.
+* Upon Observation it can be seen that the different types of moves are fixed.
+* What we need to do is take permuataion and take care of the repeated moves.
+
+```
+int uniquePaths(int n, int m) 
+{
+    int down=n-1;
+    int rgt=m-1;
+    int ma=max(rgt,down);
+    int mi=min(down,rgt);
+    long ans=1;
+    int i;
+    for(i=ma+1;i<=(down+rgt);i++)
+    {
+        if(ans>10000)
+            break;
+        ans*=i;
+    }
+    int j=1;
+    while(i<=(down+rgt))
+    {
+        ans*=i;
+        ans/=j;
+        i++,j++;
+    }
+    while(j<=mi)
+    {
+        ans/=j;
+        j++;
+    }
+    return (int)ans;
+}
+```
+
+### 6. [Reverse Pairs](https://leetcode.com/problems/reverse-pairs/)
+
+* This problem is a slight variation of **Inversion Count** so all the code remains the same just a few lines added.
+
+```
+for(i=0;i<m;i++)
+        right2.push_back(1ll*right1[i]*2);
+    i=0;
+    int sz;
+    while(i<n or j<m)
+    {
+        if(j==m)
+        {
+            sz=merged.size();
+            if(!merged.empty())
+                inversions+=(sz-i);
+            merged.push_back(left1[i]);
+            i++;
+        }
+        else if(i==n)
+        {
+            merged.push_back(right2[j]);
+            j++;
+        }
+        else
+        {
+            if(right2[j]<left1[i])
+            {
+                merged.push_back(right2[j]);
+                j++;
+            }
+            else
+            {
+                sz=merged.size();
+                if(!merged.empty())
+                    inversions+=(sz-i);
+                merged.push_back(left1[i]);
+                i++;
+            }
+        }
+    }
+```
