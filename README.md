@@ -1052,3 +1052,7 @@ int lengthOfLongestSubstring(string c)
     return ans;
 }
 ```
+### Another Approach
+* It would be just to store the last appearing index of the current element is it is repeated to evade the time taken by the left pointer.
+* Then the question is that how do we get rid of those previos elements that appear before the repeated index.
+* We don't , if after the removal of the first element if an element exists furthur that appears before the repetation index of the previous element then our its out of our current range , so thats how we discard the repitation and update the index again in the map and move on.
