@@ -792,3 +792,263 @@ for(i=0;i<m;i++)
         }
     }
 ```
+# Day_4
+
+### 1. [Two Sum](https://leetcode.com/problems/two-sum/)
+
+* This is very Simple.
+* You just have to store the elements before the current index in a map.
+* The interative step is just to search the element relatice to target sum inside the map with the current element.
+
+```
+vector<int> twoSum(vector<int>& c, int target)
+{
+    int n=c.size();
+    map<int,int> m;
+    vector<int> ans(2);
+    for(int i=0;i<n;i++)
+    {
+        if(!m.empty() and m.count(target-c[i]))
+        {
+            ans[0]=m[target-c[i]];
+            ans[1]=i;
+            break;
+        }
+        else
+            m[c[i]]=i;
+    }
+    return ans;
+}
+```
+
+### 2. [4Sum](https://leetcode.com/problems/4sum/)
+
+* The Idea is of a brute force with a two pointer approach.
+* Just do a nested double iteration for the first two numbers and then a two pointer sweep for the remaining.
+* Since the array is sorted the two pointer works and we avoid the duplicates.
+
+```
+vector<vector<int> > fourSum(vector<int> &c, int k)
+{
+    int n=c.size();
+    sort(c.begin(), c.end());
+    vector<vector<int>> ans;
+    int i=0,j=1,tempI=-1e8,tempJ=-1e8;
+    while(i<n-3)
+    {
+        while(i<n-3 and tempI==c[i])
+            i++;
+        if(i==n-3)
+            break;
+        tempJ=-1e8;
+        j=i+1;
+        while(j<n-2)
+        {
+            while(j<n-2 and tempJ==c[j])
+                j++;
+            if(j==n-2)
+                break;
+            int l=j+1,r=n-1;
+            while(l<r)
+            {
+                if(c[l]+c[r]+c[i]+c[j]>k)
+                    r--;
+                else if(c[l]+c[r]+c[i]+c[j]<k)
+                    l++;
+                else
+                {
+                    ans.push_back({c[i],c[j],c[l],c[r]});
+                    int l1=l,r1=r;
+                    while(l<r and c[l]==c[l1] and c[r]==c[r1])
+                        l++,r--;
+                }
+            }
+            tempJ=c[j];
+            j++;
+        }
+        tempI=c[i];
+        i++;
+    }    
+    return ans;
+}
+```
+### 3. [Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
+
+* For this problem there are two solutions , one that I wrote and the other is a little simple but with less lines of code.
+* For my approach I used a `unordered_map` for **Co-ordinate Compression** and used the compressed number to connect a **DSU**.
+* The largest connected component is the final answer.
+
+```
+unordered_map<int,int> m;
+vector<int> sz,indx;
+int numComponents;
+int findRoot(int x)
+{
+    int endPoint=x,tempPoint;
+    while(x!=indx[x])
+        x=indx[x];
+    while(endPoint!=indx[endPoint])
+    {
+        tempPoint=endPoint;
+        endPoint=indx[endPoint];
+        indx[tempPoint]=x;
+    }
+    return x;
+}
+void union_find(int x,int y)
+{
+    int find1=findRoot(x),find2=findRoot(y);
+    if(find1==find2)
+        return;
+    // debug2(x,y);
+    if(sz[find1]>sz[find2])
+    {
+        sz[find1]+=sz[find2];
+        sz[find2]=1;
+        indx[find2]=find1;
+    }
+    else
+    {
+        sz[find2]+=sz[find1];
+        sz[find1]=1;
+        indx[find1]=find2;
+    }
+    numComponents--;
+}
+int longestConsecutive(vector<int>& c) 
+{
+    int n;
+    n=c.size();
+    numComponents=n;
+    for(int i=0;i<n;i++)
+    {
+        m[c[i]]=i;
+        indx.push_back(i);
+        sz.push_back(1);
+    }
+    int key,val;
+    for(auto it : m)
+    {
+        key=it.first;
+        val=it.second;
+        // debug2(key,val);
+        if(m.find(key-1) != m.end())
+            union_find(m[key-1],val);
+        if(m.find(key+1) != m.end())
+            union_find(m[key+1],val);
+    }
+    int ma=0;
+    for(int i=0;i<n;i++)
+        ma=max(ma,sz[i]);
+    return ma;
+}
+```
+### Another Approach
+* Before doing this store everything in the set.
+* Another approach is very smart in which we just create an `unordered_set` and for every element we check for `currEle-1` in the set.
+* Now when not found that means that element is the smallest of its consecutive sequence.
+* So now the task is to search continous consecutive for every element that has no `currEle-1` in it.
+
+### 4. [Largest subarray with 0 sum](https://practice.geeksforgeeks.org/problems/largest-subarray-with-0-sum/1#)
+
+* The Logic is of prefix sum.
+* The Two point the prefix sum is same , let's say `(x,y)` then the array size that will contribute to the answer is `y-x`.
+* Create the `map` for the elements of the prefix sum and check for repitations and `0`.
+* `0` means the whole subarray from start to that point is contributing to the answer.
+
+```
+int maxLen(int c[], int n)
+{
+    map<int,int> m;
+    for(int i=1;i<n;i++)
+    {
+        c[i]+=c[i-1];
+    }
+    int ma=0;
+    for(int i=0;i<n;i++)
+    {
+        if(c[i]==0)
+        {
+            ma=max(ma,i+1);
+            continue;
+        }
+        if(m.find(c[i])==m.end())
+            m[c[i]]=i;
+        else
+        {
+            ma=max(ma,i-m[c[i]]);
+        }
+    }
+    return ma;
+}
+```
+
+### 5. [Count the number of subarrays having a given XOR](https://www.geeksforgeeks.org/count-number-subarrays-given-xor/)
+
+* The idea is simply this that if there exists a subarray that that contains the given xor then...
+* there will always be a whole subaaray from the starting to that endpoint of the subarray.
+* So if we `xor` all the elements of the two subarray then the answer that remains is the subarray starting from the zero position to just before the starting point for the target xor subarray.
+* Now we just need to store the `xor` of first two subarrays and store the answer in `map` and then iterate with updating xor to match the value of the third subarray that remains.
+
+```
+int countXorSubArray(vector<int>& c,int k)
+{
+    int n=c.size();
+    unordered_map<int,int> m;
+    vector<int> temp=c;
+    for(int i=1;i<n;i++)
+    {
+        temp[i]^=temp[i-1];
+    }
+    for(int i=0;i<n;i++)
+    {
+        int xorEle=temp[i]^k;
+        m[xorEle]=1;
+    }
+    int ele=0,ct=0;
+    for(int i=0;i<n;i++)
+    {
+        if(m.count(ele))
+            ct++;
+        ele^=c[i];
+    }
+    return ct;
+}
+```
+
+### 6. [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+
+* The idea simply is a sliding window whenever we get a repetation of character in the `map`.
+* Then we move the second pointer and delete those values(every value that comes) until we remove the repitation.
+* Then just take max of the window.
+```
+int lengthOfLongestSubstring(string c) 
+{
+    int n=c.size();
+    unordered_map<char,int> m;
+    for(char i='a';i<='z';i++)
+        m[i]=0;
+    int ct=0,ans=0;
+    int i=0,j=0;
+    while(i<n)
+    {
+        if(m[c[i]]==1)
+        {
+            while(j<n and c[j]!=c[i])
+            {
+                m[c[j]]=0;
+                j++;
+            }
+            j++;
+            m[c[i]]=0;
+        }
+        else
+        {
+            m[c[i]]=1;
+            ans=max(ans,i-j+1);
+            i++;
+        }
+    }
+    return ans;
+}
+```
