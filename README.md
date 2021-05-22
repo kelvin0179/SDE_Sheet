@@ -1056,3 +1056,450 @@ int lengthOfLongestSubstring(string c)
 * It would be just to store the last appearing index of the current element is it is repeated to evade the time taken by the left pointer.
 * Then the question is that how do we get rid of those previos elements that appear before the repeated index.
 * We don't , if after the removal of the first element if an element exists furthur that appears before the repetation index of the previous element then our its out of our current range , so thats how we discard the repitation and update the index again in the map and move on.
+
+# Day_5
+
+### 1. [Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)
+
+* The idea is pretty simple , its just to have refernce to the next and the previous node and do the reversal operation.
+```
+ListNode* reverseList(ListNode* head) 
+{
+    if(head==NULL)
+        return head;
+    ListNode *start=head,*curr=head,*left=head,*right=head;
+    curr=curr->next;
+    right=curr;
+    while(curr)
+    {
+        right=right->next;
+        curr->next=left;
+        left=curr;
+        curr=right;
+    }
+    head=left;
+    start->next=NULL;
+    return head;
+}
+```
+### 2. [Middle of the Linked List](https://leetcode.com/problems/middle-of-the-linked-list/)
+
+* This can be done in a naive way , but the optimal solution is a smart one.
+* In this approach we take the help of a **Fast Pointer** and a **Slow Pointer**.
+* Fast moves two steps at a time and slow with one at a time.
+* With some edge case management we can see if the fast hits the last node , we get the middle at the slow pointer.
+
+```
+ListNode* middleNode(ListNode* head) 
+{
+    ListNode *slow = head, *fast = head;
+    while (fast && fast->next)
+        slow = slow->next, fast = fast->next->next;
+    return slow;
+}
+```
+
+### 3. [Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)
+
+* The idea is to take the head pointer as the minimum of the two linked lists and continue with a two pointer of connecting nodes.
+
+```
+Node *merge(Node *head1,Node * head2)
+{
+    Node *head,*start;
+    if(head1->data<=head2->data)
+    {
+        head=head1;
+        head1=head1->bottom;
+    }
+    else
+    {
+        head=head2;
+        head2=head2->bottom;
+    }
+    start=head;
+    while(head1 or head2)
+    {
+        if(head1 and head2)
+        {
+            if(head1->data<=head2->data)
+            {
+                head->bottom=head1;
+                head1=head1->bottom;
+            }
+            else
+            {
+                head->bottom=head2;
+                head2=head2->bottom;
+            }
+        }
+        else if(!head1)
+        {
+            head->bottom=head2;
+            head2=head2->bottom;
+        }
+        else
+        {
+            head->bottom=head1;
+            head1=head1->bottom;
+        }
+        head=head->bottom;
+    }
+    return start;
+}
+```
+
+# 4. [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+
+* The idea is again of a fast and slow pointer.
+* By keeping the distance between them as the given postion of deletion , when fast hits the last node , the slow pointer will be at the target node.
+
+```
+ListNode* removeNthFromEnd(ListNode* head, int n) 
+{
+    ListNode *fast,*slow;
+    fast=head,slow=head;
+    while(n--)
+        fast=fast->next;
+    if(!fast)
+    {
+        head=head->next;
+        return head;
+    }
+    while(fast->next)
+    {
+        fast=fast->next;
+        slow=slow->next;
+    }
+    slow->next=slow->next->next;
+    return head;
+}
+```
+
+# 5. [Delete Node in a Linked List](https://leetcode.com/problems/delete-node-in-a-linked-list/)
+
+* Upon some observation it is impossible to delete the node.
+* But it is possible to overwrite values.
+
+```
+void deleteNode(ListNode* node) 
+{
+    while(1)
+    {
+        node->val=node->next->val;
+        if(node->next->next==NULL)
+        {
+            node->next=NULL;
+            break;
+        }
+        node=node->next;
+    }
+}
+```
+
+# 6. [Add two numbers represented by linked lists](https://practice.geeksforgeeks.org/problems/add-two-numbers-represented-by-linked-lists/1)
+
+* The idea is to do elementary addition with keeping track of the carry.
+* At the end after addtion if the carry remains it will be also considered.
+```
+struct Node* addTwoLists(struct Node* first, struct Node* second)
+{
+    // code here
+    Node *start,*curr,*left,*right;
+    start=left=right=curr=first;
+    curr=curr->next;
+    right=curr;
+    while(curr)
+    {
+        right=right->next;
+        curr->next=left;
+        left=curr;
+        curr=right;
+    }
+    first=left;
+    start->next=NULL;
+    
+    start=left=right=curr=second;
+    curr=curr->next;
+    right=curr;
+    while(curr)
+    {
+        right=right->next;
+        curr->next=left;
+        left=curr;
+        curr=right;
+    }
+    second=left;
+    start->next=NULL;
+    
+    Node* sumHead=NULL;
+    int carry=0;
+    while(first or second)
+    {
+        int sum=0;
+        if(first)
+        {
+            sum+=first->data;
+            first=first->next;
+        }
+        if(second)
+        {
+            sum+=second->data;
+            second=second->next;
+        }
+        sum+=carry;
+        carry=0;
+        carry=sum/10;
+        sum%=10;
+        Node* node=new Node(sum);
+        if(sumHead==NULL)
+            sumHead=node;
+        else
+        {
+            node->next=sumHead;
+            sumHead=node;
+        }
+    }
+    if(carry!=0)
+    {
+        Node* node=new Node(carry);
+        node->next=sumHead;
+        sumHead=node;
+    }
+    return sumHead;
+}
+```
+
+# Day_6
+
+### 1. [Intersection Point in Y Shapped Linked Lists](https://practice.geeksforgeeks.org/problems/intersection-point-in-y-shapped-linked-lists/1)
+
+* There are two methods to this question , one is to delete all the edges of the first linked list so that the intersection will contain null address , which can be easily found by the second linked list.
+* The second method is to take the difference in length of both lists and bring the head node to a relative equal level according to their sum.
+
+```
+int intersectPoint(Node* head1, Node* head2)
+{
+    Node* temp;
+    while(head1)
+    {
+        temp=head1;
+        head1=head1->next;
+        temp->next=NULL;
+    }
+    while(head2)
+    {
+        if(head2->next==NULL)
+            return head2->data;
+        head2=head2->next;
+    }
+}
+```
+### 2. [Reverse a Linked List in groups of given size](https://practice.geeksforgeeks.org/problems/reverse-a-linked-list-in-groups-of-given-size/1)
+
+* This problem is implementation heavy and the logic is exactly what's told in the question.
+* My advice will be to draw a diagram of 12 nodes with a division of 4 and try to solve it.
+
+```
+struct node *reverse (struct node *head, int k)
+{ 
+        
+    node *start,*curr,*left,*right;
+    start=curr=left=right=head;
+    int i=0;
+    while(curr!=NULL)
+    {
+        node* tempStart=curr;
+        left=curr;
+        right=right->next;
+        curr=curr->next;
+        int k1=k;
+        k1--;
+        while(k1--)
+        {
+            if(curr==NULL)
+                break;
+            right=right->next;
+            curr->next=left;
+            left=curr;
+            curr=right;
+        }
+        if(i==0)
+            head=left;
+        else
+        {
+            start->next=left;
+            start=tempStart;
+        }
+        if(curr==NULL)
+            tempStart->next=NULL;
+        i++;
+    }
+    return head;
+}
+```
+
+# 3. [Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)
+
+* The idea is to look for the middle using fast and slow pointers and then reverse the second half of the list.
+* Then the checking for pallindrome is a linear iteration.
+
+```
+bool isPalindrome(ListNode* head) 
+{
+    if(!head->next)
+        return 1;
+    ListNode *slow=head,*fast=head,*start=head;
+    while(fast->next and fast->next->next)
+    {
+        slow=slow->next;
+        fast=fast->next->next;
+    }
+    ListNode *left=slow->next;
+    ListNode *right=left->next,*curr=right,*start1=left;
+    while(curr)
+    {
+        right=curr->next;
+        curr->next=left;
+        left=curr;
+        curr=right;
+    }
+    start1->next=NULL;
+    slow->next=NULL;
+    start1=left;
+    while(start and start1)
+    {
+        if(start->val != start1->val)
+            return 0;
+        start=start->next;
+        start1=start1->next;
+    }
+    return 1;
+}
+```
+
+### 4. [Find the starting point of the Loop of LinkedList](https://leetcode.com/problems/linked-list-cycle-ii/)
+
+* The idea is again the **Tortoise Method** , in which we take a fast and slow pointer and when the two connects.
+* We take the one pointer at the starting point keeping the other idle.
+* Then we traverse both in the assigned direction and when they meet that's the answer.
+
+```
+ListNode *detectCycle(ListNode *head) 
+{
+    ListNode *slow=head,*fast=head,*start=head;
+    while(1)
+    {
+        if(!fast or !fast->next)
+            return NULL;
+        slow=slow->next;
+        fast=fast->next->next;
+        if(slow==fast)
+            break;
+    }
+    slow=start;
+    while(1)
+    {
+        if(slow==fast)
+            break;
+        fast=fast->next;
+        slow=slow->next;
+    }
+    return slow;
+}
+```
+
+### 5. [Flattening of a LinkedList](https://practice.geeksforgeeks.org/problems/flattening-a-linked-list/1)
+
+* The idea is to give a recurrsion until the end of the outer list and from there we merge the couple of last lists till the fisrt outer list and empty the recurrsion stack.
+
+```
+Node *merge(Node *head1,Node * head2)
+{
+    Node *head,*start;
+    if(head1->data<=head2->data)
+    {
+        head=head1;
+        head1=head1->bottom;
+    }
+    else
+    {
+        head=head2;
+        head2=head2->bottom;
+    }
+    start=head;
+    while(head1 or head2)
+    {
+        if(head1 and head2)
+        {
+            if(head1->data<=head2->data)
+            {
+                head->bottom=head1;
+                head1=head1->bottom;
+            }
+            else
+            {
+                head->bottom=head2;
+                head2=head2->bottom;
+            }
+        }
+        else if(!head1)
+        {
+            head->bottom=head2;
+            head2=head2->bottom;
+        }
+        else
+        {
+            head->bottom=head1;
+            head1=head1->bottom;
+        }
+        head=head->bottom;
+    }
+    return start;
+}
+Node *global;
+Node *flatten(Node *root)
+{
+    if(!root->next)
+        return root;
+    global=flatten(root->next);
+    global=merge(root,global);
+    return global;
+}
+```
+
+### 6. [Rotate List](https://leetcode.com/problems/rotate-list/)
+
+* The question is pretty trivial where you are given an infinite number of rotations and we just `%` the rotations with the size of the list to figure out the effective number of rotations.
+* The Next step is to see that if we rotate `k` times from the end then that's equal to `size-k` times from the start , Since visiting end will always tak more time.
+
+```
+ListNode* rotateRight(ListNode* head, int k) 
+{
+    if(!head or !head->next or k==0)
+        return head;
+    int sz=0;
+    ListNode *startPoint=head,*endPoint;
+    while(startPoint)
+    {
+        sz++;
+        endPoint=startPoint;
+        startPoint=startPoint->next;
+    }
+    k%=sz;
+    k=sz-k;
+    startPoint=head;
+    ListNode *temp;
+    while(k--)
+    {
+        temp=startPoint->next;
+        endPoint->next=startPoint;
+        startPoint->next=NULL;
+        endPoint=startPoint;
+        startPoint=temp;
+    }
+    return startPoint;
+}
+```
+### Another Approach
+* One more way would be to create the circular list with an operation and calculate to delete a particular edge to form the answer.
