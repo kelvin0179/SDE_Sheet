@@ -1149,7 +1149,7 @@ Node *merge(Node *head1,Node * head2)
 }
 ```
 
-# 4. [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+### 4. [Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
 
 * The idea is again of a fast and slow pointer.
 * By keeping the distance between them as the given postion of deletion , when fast hits the last node , the slow pointer will be at the target node.
@@ -1176,7 +1176,7 @@ ListNode* removeNthFromEnd(ListNode* head, int n)
 }
 ```
 
-# 5. [Delete Node in a Linked List](https://leetcode.com/problems/delete-node-in-a-linked-list/)
+### 5. [Delete Node in a Linked List](https://leetcode.com/problems/delete-node-in-a-linked-list/)
 
 * Upon some observation it is impossible to delete the node.
 * But it is possible to overwrite values.
@@ -1197,7 +1197,7 @@ void deleteNode(ListNode* node)
 }
 ```
 
-# 6. [Add two numbers represented by linked lists](https://practice.geeksforgeeks.org/problems/add-two-numbers-represented-by-linked-lists/1)
+### 6. [Add two numbers represented by linked lists](https://practice.geeksforgeeks.org/problems/add-two-numbers-represented-by-linked-lists/1)
 
 * The idea is to do elementary addition with keeping track of the carry.
 * At the end after addtion if the carry remains it will be also considered.
@@ -1339,7 +1339,7 @@ struct node *reverse (struct node *head, int k)
 }
 ```
 
-# 3. [Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)
+### 3. [Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)
 
 * The idea is to look for the middle using fast and slow pointers and then reverse the second half of the list.
 * Then the checking for pallindrome is a linear iteration.
