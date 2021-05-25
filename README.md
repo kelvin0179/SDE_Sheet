@@ -1503,3 +1503,111 @@ ListNode* rotateRight(ListNode* head, int k)
 ```
 ### Another Approach
 * One more way would be to create the circular list with an operation and calculate to delete a particular edge to form the answer.
+
+# Day_7
+
+### 1. [Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+
+* The idea is to add dummy nodes in between the orignal nodes and redefine the connections.
+* With the help of the orignal nodes we can assign the `random` pointers to the new nodes.
+* Then assgin the `next` address of the new and old nodes to themselves.
+* Return the address of the first new node.
+
+```
+Node* copyRandomList(Node* head) 
+{
+    if(!head)
+        return NULL;
+    Node *start=head;
+    while(head)
+    {
+        Node *node=new Node(head->val);
+        node->next=head->next;
+        head->next=node;
+        head=head->next->next;
+    }    
+    head=start;
+    while(head)
+    {
+        if(!head->random)
+            head->next->random=head->random;
+        else
+            head->next->random=head->random->next;
+        head=head->next->next;
+    }
+    head=start;
+    start=head->next;
+    Node *head1=NULL;
+    while(head)
+    {
+        head1=head->next;
+        head->next=head->next->next;
+        if(!head1->next)
+            head1->next=head1->next;
+        else
+            head1->next=head1->next->next;
+        head=head->next;
+    }
+    return start;
+}
+```
+
+### 2. [Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
+
+* The idea behind this is that between the left and the right border we always select the one with the minimum value.
+* So the intuition starts as taking two pointers as first and last index and the taking the `fromLeft` and `fromRight` maximun for the answer.
+* Then comparing the element of the 1st and last position which ever is minimum we take that with the difference with its respected maximum.
+
+```
+int trap(vector<int>& c) 
+{
+    int n=c.size();
+    if(n==0)
+        return 0;
+    int leftMax=c[0],rightMax=c[n-1];
+    int l=0,r=n-1,ans=0;
+    while(r-l>0)
+    {
+        if(c[l]<=c[r])
+        {
+            leftMax=max(c[l],leftMax);
+            ans+=(max(0,leftMax-c[l]));
+            l++;
+        }
+        else
+        {
+            rightMax=max(rightMax,c[r]);
+            ans+=(max(0,rightMax-c[r]));
+            r--;
+        }
+    }
+    return ans;
+}
+```
+### 3. [Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+
+* This is very trivial , we take a point for editing the numbers and the second pointer for finding the new numbers.
+
+```
+int removeDuplicates(vector<int>& c)
+{
+    if(c.empty())
+        return 0;
+    int i=0,j=0;
+    int n=c.size();
+    while(j<n)
+    {
+        if(j<n and c[j]==c[i])
+            j++;
+        else
+        {
+            i++;
+            c[i]=c[j];
+        }
+    }
+    return i+1;
+}   
+```
+
+### 4. [Max Consecutive Ones](https://leetcode.com/problems/max-consecutive-ones/)
+* Lmao at this point this should not be a problem.
