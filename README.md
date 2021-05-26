@@ -1611,3 +1611,104 @@ int removeDuplicates(vector<int>& c)
 
 ### 4. [Max Consecutive Ones](https://leetcode.com/problems/max-consecutive-ones/)
 * Lmao at this point this should not be a problem.
+
+# Day_8
+
+### 1. [N meetings in one room](https://practice.geeksforgeeks.org/problems/n-meetings-in-one-room-1587115620/1#)
+
+* The idea is to find disjoint ranges.
+* We want to end a current meeting as soon as possible so that the next meeting can start.
+* So we sort all the range according to the end points and the we give preferance to the starting position.
+* Now we keep track of the previous ended meeting and iterate for the next disjoint starting point.
+
+```
+int maxMeetings(int c1[], int c2[], int n)
+{
+    vector<pair<int,int>> p;
+    for(int i=0;i<n;i++)
+        p.push_back({c1[i],c2[i]});
+    sort(p.begin(), p.end(),cmp());
+    int ct=1,endPoint=p[0].second;
+    for(int i=1;i<n;i++)
+    {
+        if(p[i].first>endPoint)
+            ct++,endPoint=p[i].second;
+    }
+    return ct;
+}
+```
+
+### 2. [Minimum Platforms](https://practice.geeksforgeeks.org/problems/minimum-platforms-1587115620/1#)
+
+* The idea is to assign `+1` and `-1` to the starting and ending point and sort them.
+* Then do a prefix sum and take the maximum accordingly.
+
+```
+int findPlatform(int arr[], int dep[], int n)
+{
+    vector<pair<int,int>> p;
+    for(int i=0;i<n;i++)
+    {
+        p.push_back({arr[i],1});
+        p.push_back({dep[i]+1,-1});
+    }
+    sort(p.begin(), p.end());
+    int ans=0,ma=0;
+    for(int i=0;i<p.size();i++)
+    {
+        ans+=p[i].second;
+        ma=max(ma,ans);
+    }
+    return ma;
+}
+```
+
+### 3. [Fractional Knapsack](https://practice.geeksforgeeks.org/problems/fractional-knapsack-1587115620/1#)
+
+* The idea is to apply unitary method to take the value of a unit weight for a particular index.
+* Sort the array according to a comparator following the above rule.
+* Now take the final answer accoring to the input weight.
+
+```
+class cmp
+{
+public:
+    bool operator()(Item a,Item b)
+    {
+        double a1=(a.value*1.0)/a.weight;
+        double b1=(b.value*1.0)/b.weight;
+        return a1>b1;
+    }
+};
+class Solution
+{
+    public:
+    //Function to get the maximum total value in the knapsack.
+    double waapas(int &value,int &currWeight,int &maxWeight)
+    {
+        double ans=(value*1.0*currWeight)/maxWeight;
+        return ans;
+    }
+    double fractionalKnapsack(int W, Item arr[], int n)
+    {
+        sort(arr,arr+n,cmp());
+        double ans=0;
+        for(int i=0;i<n;i++)
+        {
+            if(W==0)
+                break;
+            if(W>arr[i].weight)
+            {
+                ans+=arr[i].value;
+                W-=arr[i].weight;
+            }
+            else
+            {
+                ans+=waapas(arr[i].value,W,arr[i].weight);;
+                W=0;
+            }
+        }
+        return ans;
+    }
+};
+```
