@@ -1712,3 +1712,236 @@ class Solution
     }
 };
 ```
+
+# Day_9
+
+### 1. [Subset Sums](https://practice.geeksforgeeks.org/problems/subset-sums2234/1)
+
+* The idea is to make two decision for every step , that is either to chose or not not choose the current element.
+* At the end when th eindex reaches to `n` , we store the answer.
+
+```
+vector<int> ans;
+void recc(vector<int> &c,int &n,int i,int sum)
+{
+    if(i==n)
+    {
+        ans.push_back(sum);
+        return;
+    }
+    recc(c,n,i+1,sum);
+    recc(c,n,i+1,c[i]+sum);
+}
+vector<int> subsetSums(vector<int> arr, int N)
+{
+    recc(arr,N,0,0);
+    vector<int> a=ans;
+    sort(a.begin(),a.end());
+    return a;
+}
+```
+
+### 2. [Subsets II](https://leetcode.com/problems/subsets-ii/)
+
+* Here the concept of BackTracking is used .
+* At first we sort the array for the duplicates to occur together.
+* Then elimination of the dublicates in the recurrsion in very easy since the array is sorted.
+
+```
+vector<vector<int>> ans;
+void subsetFind(vector<int> &c,int x,int n,vector<int> allSet)
+{
+    if(x==n)
+        return;
+    int rep=-100;
+    for(int i=x;i<n;i++)
+    {
+        if(rep!=c[i])
+        {
+            allSet.push_back(c[i]);
+            ans.push_back(allSet);
+            subsetFind(c,i+1,n,allSet);
+            allSet.pop_back();
+            rep=c[i];
+        }
+    }
+}
+vector<vector<int>> subsetsWithDup(vector<int>& c) 
+{
+    int n=c.size();
+    vector<int> t;
+    sort(c.begin(), c.end());
+    subsetFind(c,0,n,t);
+    ans.push_back({});
+    return ans;
+}
+```
+
+### 3. [Combination Sum](https://leetcode.com/problems/combination-sum/)
+
+* The idea is for reaching the target sum with unique combination it is pretty intuitive to sort the array first.
+* After this we can , for every element , subtract the multiple of that number in the increasing order of multiplicity.
+* For every multiplicity we subtract the result and send the remaining value to the next element.
+
+```
+vector<vector<int>> ans;
+void combination(vector<int> &c, int x, int sum, vector<int> store)
+{
+    if(sum==0)
+    {
+        ans.push_back(store);
+        return;
+    }
+    if(x==-1 or sum<0)
+        return;
+    int i=0;
+    while(sum-(c[x]*i)>=0)
+    {
+        combination(c,x-1,sum-(c[x]*i),store);
+        store.push_back(c[x]);
+        i++;
+    }
+}
+vector<vector<int>> combinationSum(vector<int>& c, int target) 
+{
+    int n=c.size();
+    sort(c.begin(),c.end());
+    vector<int> t;
+    combination(c,n-1,target,t);
+    // debug(ans)
+    return ans;
+}
+```
+
+### 4. [Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)
+
+* Sort the array and upon observing we can notice that , if for every recurrsion call we try all the elements that occur after the previous recurrsio call , then after reaching the end we can always get unique answers.
+
+```
+vector<vector<int>> ans;
+void combination(vector<int> &c, int x,int n, int sum,vector<int> &store)
+{
+    if(sum==0)
+    {
+        ans.push_back(store);
+        return;
+    }
+    if(x==n)
+        return;
+    int rep=-1;
+    for(int i=x;i<n;i++)
+    {
+        if(c[i]>sum)    return;
+        if(rep!=c[i])
+        {
+            store.push_back(c[i]);
+            combination(c,i+1,n,sum-c[i],store);
+            store.pop_back();
+            rep=c[i];
+        }
+    }
+}
+vector<vector<int>> combinationSum2(vector<int>& c, int target) 
+{
+    sort(c.begin(),c.end());
+    int n=c.size();
+    vector<int> t;
+    combination(c,0,n,target,t);
+    return ans;
+}
+```
+
+### 5. [Palindrome Partitioning ](https://leetcode.com/problems/palindrome-partitioning/)
+
+* The idea is to do a two pointer inside the recurrsion , where for every call we check if the two pointers pointing the substring is pallindrome or not.
+* If it is the we shift both the pointer just above the end of the current string and call the next recurrsion.
+* In the end if we reach the end then we have a answer and we store it.
+
+```
+int n,sz;
+vector<vector<string>> c;
+bool pallin(string &s)
+{
+    sz=s.size();
+    for(int i=0;i<=sz/2;i++)
+    {
+        if(s[i]!=s[sz-i-1])
+            return 0;
+    }
+    return 1;
+}
+void recc(int l,int r,string &s,vector<string> &v)
+{
+    if(l==r and r==n)
+    {
+        c.push_back(v);
+        return;
+    }
+    if(r==n)
+        return;
+    string t;
+    while(r<n)
+    {
+        t.push_back(s[r]);
+        if(pallin(t))
+        {
+            v.push_back(t);
+            recc(r+1,r+1,s,v);
+            v.pop_back();
+        }
+        r++;
+    }
+}
+vector<vector<string>> partition(string s)
+{
+    n=s.size();
+    vector<string> v;
+    recc(0,0,s,v);
+    return c;
+}
+```
+
+### 6. [Permutation Sequence](https://leetcode.com/problems/permutation-sequence/)
+
+* The first approach will be brute force but upon more observation we can see a pattern emerging.
+* The idea is to see that for every position we can calculate the number that will occur there by the count of the factorial of the elements till that position.
+* After calculating for that position we tranfer the new remainder as the new input to find the number at the next index.
+
+```
+set<int> s;
+vector<int> fact;
+string getPermutation(int n, int k)
+{
+    k--;
+    for(int i=1;i<=n;i++)
+        s.insert(i);
+    fact=vector<int>(n+1,1);
+    for(int i=2;i<=n;i++)
+        fact[i]*=fact[i-1]*i;
+    string ans="";
+    int sz,rem,quo,i;
+    while(!s.empty())
+    {
+        sz=s.size();
+        rem=k%(fact[sz-1]);
+        quo=k/(fact[sz-1]);
+        i=0;
+        for(auto it: s)
+        {
+            if(i==quo)
+            {
+                ans+=(to_string(it));
+                s.erase(it);
+                break;
+            }
+            i++;
+        }
+        k=rem;
+    }
+    return ans;
+}
+```
+
+# Day_10
+
+### 1. []()
