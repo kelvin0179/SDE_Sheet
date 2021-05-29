@@ -1944,4 +1944,155 @@ string getPermutation(int n, int k)
 
 # Day_10
 
-### 1. []()
+### 1. [Permutations](https://leetcode.com/problems/permutations/)
+
+* The idea is to pick and mrak number as they appear in the array and upon completing the whole recurrsion tree we can get the possible permutations.
+
+```
+int n;
+vector<vector<int>> ans;
+vector<bool> vis;
+void recc(vector<int> &c,vector<bool> &vis,vector<int> &store,int sz)
+{
+    if(sz==n)
+    {
+        ans.push_back(store);
+        return;
+    }
+    for(int i=0;i<n;i++)
+    {
+        if(vis[i]==0)
+        {
+            vis[i]=1;
+            store.push_back(c[i]);
+            recc(c,vis,store,sz+1);
+            store.pop_back();
+            vis[i]=0;
+        }
+    }
+}
+vector<vector<int>> permute(vector<int>& c)
+{
+    n=c.size();
+    vis=vector<bool>(n,0);
+    vector<int> t;
+    recc(c,vis,t,0);
+    return ans;
+}
+```
+
+### 2. [N-Queens](https://leetcode.com/problems/n-queens/)
+
+* The Brute Force in this Problem is optimized a trick of storing the left and right diagonals.
+* The left diagonal has a simple formula for storage that is `row+col` and the right one has `(n-1)+(col-row)`.
+* The storing for the row and column is easy now all is left are the recurrsion calls.
+* For evey index put a Queens if possible and move to the next row , after completing for that call erase that queen and proceed to the next column.
+
+```
+vector<bool> visRow,visCol,visUpDiag,visDownDiag;
+vector<vector<string>> ans;
+bool check(int &n,int &row,int &col)
+{
+    if(visRow[row] || visCol[col] || visUpDiag[row+col] || visDownDiag[n-1+col-row])
+        return 0;
+    return 1;
+}
+void placeQueen(int &n,int row,vector<string> &s)
+{
+    if(row==n)
+    {
+        ans.push_back(s);
+        return;
+    }
+    for(int i=0;i<n;i++)
+    {
+        if(check(n,row,i))
+        {
+            s[row][i]='Q';
+            visRow[row]=1,visCol[i]=1;
+            visUpDiag[row+i]=1,visDownDiag[n-1+i-row]=1;
+            placeQueen(n,row+1,s);
+            visRow[row]=0,visCol[i]=0;
+            visUpDiag[row+i]=0,visDownDiag[n-1+i-row]=0;
+            s[row][i]='.';
+        }
+    }
+}
+vector<vector<string>> solveNQueens(int n)
+{
+    visRow=visCol=vector<bool>(n,0);
+    visUpDiag=visDownDiag=vector<bool>((2*n)-1,0);
+    vector<string> s(n,string(n,'.'));
+    placeQueen(n,0,s);
+    return ans;
+}
+```
+
+### 3. [Sudoku Solver](https://leetcode.com/problems/sudoku-solver/)
+
+* There are three things that will need to be stored , **row_elements** , **column_elements** and **box_elements**.
+* Keeing track of these will take `O(1)` time to check the validity of the current numbers.
+* Now just place a valid number and call the next recurrsion.
+
+```
+bool visBox[3][3][10],visRow[9][10],visCol[9][10];
+bool done=0;
+vector<vector<char>> ans;
+vector<pair<int,int>> p;
+int sz;
+void recc(int pos,vector<vector<char>> &s)
+{
+    if(done)
+        return;
+    if(pos==sz)
+    {
+        ans=s;
+        done=1;
+        return;
+    }
+    int x,y;
+    string t;
+    for(int ele=1;ele<=9;ele++)
+    {
+        x=p[pos].first;
+        y=p[pos].second;
+        if(visBox[x/3][y/3][ele]==0 and visRow[x][ele]==0 and visCol[y][ele]==0)
+        {
+            visBox[x/3][y/3][ele]=1;
+            visRow[x][ele]=1;
+            visCol[y][ele]=1;
+            t=to_string(ele);
+            s[x][y]=t[0];
+            recc(pos+1,s);
+            s[x][y]='.';
+            visBox[x/3][y/3][ele]=0;
+            visRow[x][ele]=0;
+            visCol[y][ele]=0;
+        }
+    }
+}
+void solveSudoku(vector<vector<char>>& board) 
+{
+    memset(visBox,0,sizeof(visBox));
+    memset(visRow,0,sizeof(visRow));
+    memset(visCol,0,sizeof(visCol));
+    for(int i=0;i<9;i++)
+    {
+        for(int j=0;j<9;j++)
+        {
+            if(board[i][j]!='.')
+            {
+                int ele=board[i][j]-48;
+                visBox[i/3][j/3][ele]=1;
+                visRow[i][ele]=1;
+                visCol[j][ele]=1;
+            }
+            else
+                p.push_back({i,j});
+        }
+    }
+    sz=p.size();
+    recc(0,board);
+    board=ans;
+}
+```
