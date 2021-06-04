@@ -2241,3 +2241,150 @@ bool wordBreak(string s, vector<string>& s1)
     return dynamic(sz,s,0);
 }
 ```
+
+# Day_11
+
+### 1. Nth Root of a Number
+
+* We can find `x^n` in `log(n)` time.
+* But the problem is that we don't know what `x` is.
+* To find that we use `Binary Search`.
+* If for a given number `x^n` is greater than it , then we reduce the `x` and vice versa.
+
+```cpp
+double calculate(double ele,double n)
+{
+    double ans=1;
+    for(int i=0;i<n;i++)
+        ans*=ele;
+    return ans;
+}
+void solve()
+{
+    int ele,n;
+    cin>>ele>>n;
+    double low=1,high=ele;
+    int i=0;
+    while(high-low > (1.0/1e6))
+    {
+        i++;
+        double mid=(low+high)/2;
+        double val=calculate(mid,n);
+        if(val>ele)
+            high=mid;
+        else
+            low=mid;
+    }
+    cout<<low;
+}
+```
+
+### 2. Matrix Median
+
+* Since the elements were distinct the only thing was to find the number for which there is an equal distribution of the numbers in the matrix.
+* this can be achieved using `Binary Search`.
+
+```cpp
+pair<int,int> cal(vector<vector<int>> &c,int &ele,int &n,int &m)
+{
+    bool flag=0;
+    int low=0,high=0;
+    for(int i=0;i<n;i++)
+    {
+        auto it=lower_bound(c[i].begin(),c[i].end(),ele);
+        if(*it==ele)
+            flag=1;
+        low+=(it-c[i].begin());
+        high+=(c[i].end()-it);
+    }
+    if(flag)
+        return make_pair(low,high-1);
+    else
+        return make_pair(low,high);
+}
+void solve()
+{
+    int n,m;
+    read(n,m);
+    vector<vector<int>> c(n,vector<int>(m));
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+            read(c[i][j]);
+    }
+    int low=1,high=1e9;
+    while(high-low>1)
+    {
+        debug2(low,high)
+        int mid=(low+high)/2;
+        pair<int,int> val=cal(c,mid,n,m);
+        if(val.first<val.second)
+            low=mid;
+        else if(val.first>val.second)
+            high=mid;
+        else
+            low=high=mid;
+    }
+    debug(low)
+}
+```
+
+### 3. Find the element that appears once in sorted array, and rest element appears twice
+
+* The array is already sorted so with `Binary Search` we can find the single element.
+* The logic is just to observe the pairity of the index of the repeated elements before and after the single element.
+
+```cpp
+void solve()
+{
+    int n;
+    cin>>n;
+    vector<int> c;
+    int i,num;
+    for(i=0;i<n;i++)
+    {
+        cin>>num;
+        c.push_back(num);
+    }
+    int low=0,high=c.size()-1;
+    while(high-low>1)
+    {
+        int mid=(low+high)/2;
+        if(mid&1)
+        {
+            if(c[mid]==c[mid-1])
+                low=mid;
+            else
+            {
+                if(c[mid-1]!=c[mid] and c[mid+1]!=c[mid])
+                {
+                    cout<<c[mid];
+                    return;
+                }
+                else
+                    high=mid;
+            }
+        }
+        else
+        {
+            if(c[mid]==c[mid+1])
+                low=mid;
+            else
+            {
+                if(c[mid-1]!=c[mid] and c[mid+1]!=c[mid])
+                {
+                    cout<<c[mid];
+                    return;
+                }
+                else
+                    high=mid;
+            }
+        }
+    }
+    if(low==0)
+        cout<<c[low];
+    else
+        cout<<c[high];
+}
+```
+
