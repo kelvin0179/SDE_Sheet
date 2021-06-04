@@ -2455,4 +2455,51 @@ int search(vector<int> nums, int target)
 
 ### 5. [Median of 2 sorted arrays]()
 
-### 6. []()
+### 6. [K-th element of two sorted Arrays](https://practice.geeksforgeeks.org/problems/k-th-element-of-two-sorted-array1317/1)
+
+* The idea is to have a range for binary search of `[0,2e9]` and then perform searching.
+* For every element we conclude its range of index by checking the number of elements before and after it.
+* According to the range we adjust the middle and proceed.
+
+```cpp
+pair<long long,long long> cal(int c1[],int c2[],int n,int m,long long mid)
+    {
+        int low=0,high=0;
+        auto it1=lower_bound(c1,c1+n,mid);
+        auto it2=upper_bound(c1,c1+n,mid);
+        if(it1!=c1+0)
+        {
+            it1--;
+            low+=(it1-c1+1);
+        }
+        high+=((c1+n)-it2);
+        it1=lower_bound(c2,c2+m,mid);
+        it2=upper_bound(c2,c2+m,mid);
+        if(it1!=c2)
+        {
+            it1--;
+            low+=(it1-c2+1);
+        }
+        high+=(c2+m-it2);
+        return make_pair(low,high);
+    }
+long long kthElement(int arr1[], int arr2[], int n, int m, int k)
+{
+    k--;
+    long long low=0,high=2e9,mid,total=n+m,lowRange,upRange;
+    while(high-low>1)
+    {
+        mid=(low+high)/2;
+        pair<long long,long long> p=cal(arr1,arr2,n,m,mid);
+        lowRange=p.first;
+        upRange=total-p.second-1;
+        if(lowRange<=k and upRange>=k)
+            break;
+        else if(lowRange>k)
+            high=mid;
+        else
+            low=mid;
+    }
+    return mid;
+}
+```
