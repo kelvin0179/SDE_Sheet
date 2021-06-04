@@ -2388,3 +2388,71 @@ void solve()
 }
 ```
 
+### 4. [Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+
+* The Idea of searching the pivot is to compare every `Binary Search` middle value with its first value to find the correct position.
+* Then Use some STL trick to find the element.
+
+```cpp
+int n;
+int check(vector<int> c,int x)
+{
+    if(n==1)
+        return 1;
+    if(x==0 and c[x+1]<c[x])
+        return 1;
+    else if(x==n-1 and c[x]>c[x-1])
+        return 1;
+    else
+    {
+        if(x!=0 and x!=n-1 and c[x-1]<c[x] and c[x]>c[x+1])
+            return 1;
+    }
+    return 0;
+}
+int search(vector<int> nums, int target)
+{
+    n=nums.size();
+    int l=0,r=n-1;
+    while(r-l>1)
+    {
+        int mid=(l+r)/2;
+        // debug3(l,r,mid);
+        if(check(nums,mid))
+        {
+            l=r=mid;
+            break;
+        }
+        if(nums[mid]>nums[0])
+            l=mid;
+        else
+            r=mid;
+    }
+    int pivot;
+    // check(nums,0);
+    if(check(nums,l))
+        pivot=l;
+    else
+        pivot=r;
+    if(target>=nums[0])
+    {
+        auto it=lower_bound(nums.begin(),nums.begin()+pivot+1,target);
+        if(it!=nums.end() and *it==target)
+            return (it-nums.begin());
+    }
+    else
+    {
+        if(pivot!=n-1)
+        {
+            auto it=lower_bound(nums.begin()+pivot+1,nums.end(),target);
+            if(it!=nums.end() and *it==target)
+                return (it-nums.begin());
+        }
+    }
+    return -1;
+}
+```
+
+### 5. [Median of 2 sorted arrays]()
+
+### 6. []()
