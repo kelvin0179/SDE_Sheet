@@ -6,7 +6,7 @@
 
 * The Idea is to Swap all the 0's to the left.
 * Then Swap all the 2's to the right , going from behind.
-```
+```cpp
 void sortColors(vector<int>& nums) {
         int f=0;
         for(int i=0;i<nums.size();i++)
