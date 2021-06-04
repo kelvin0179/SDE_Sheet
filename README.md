@@ -2096,3 +2096,148 @@ void solveSudoku(vector<vector<char>>& board)
     board=ans;
 }
 ```
+
+### 4. [M-Coloring Problem](https://practice.geeksforgeeks.org/problems/m-coloring-problem-1587115620/1)
+
+* In this problem the important thing to notice is that , color assigned to a node does not matter as long as its differnt from adjeacent.
+* So for every node we traverse through all the colors and assign what comes first , the point where the color does not fit means the answer does not exists.
+* This is because of our initial assumtion that order of the color does not matter as long as its different.
+
+```cpp
+bool flag=0;
+short color[101];
+bool check(bool graph[][101],int col,int node)
+{
+    for(int i=0;i<101;i++)
+    {
+        if(graph[node][i] and color[i]==col)
+            return 0;
+    }
+    return 1;
+}
+bool recc(bool graph[][101],int node,int &colorNum,int ct)
+{
+    if(ct==0)
+        return 1;
+    for(int j=1;j<=colorNum;j++)
+    {
+        if(check(graph,j,node))
+        {
+            color[node]=j;
+            if(recc(graph,node+1,colorNum,ct-1))
+                return true;
+            color[node]=0;
+        }
+    }
+    return 0;
+}
+bool graphColoring(bool graph[101][101], int m, int V)
+{
+    memset(color,0,sizeof(color));
+    flag=recc(graph,0,m,V);
+    return flag;
+}
+```
+
+### 5. [Rat in a Maze](https://practice.geeksforgeeks.org/problems/rat-in-a-maze-problem/1#)
+
+* The question asks for the different possible moves going in all the 4 directions.
+* So , marking the visited as we go and making the co-ordinate unvisted again is the backtracking here.
+
+```cpp
+vector<vector<bool>> vis;
+vector<string> ans;
+bool check(vector<vector<int>> &m,int &n,int x,int y)
+{
+    if(x>=n or x<0 or y>=n or y<0)
+        return 0;
+    if(m[x][y]==0)
+        return 0;
+    return 1;
+}
+void recc(vector<vector<int>> &m,int &n,int x,int y,string &s)
+{
+    if(vis[x][y])
+        return;
+    vis[x][y]=1;
+    if(x==n-1 and y==n-1)
+    {
+        ans.push_back(s);
+        vis[x][y]=0;
+        return;
+    }
+    if(check(m,n,x+1,y))
+    {
+        s.push_back('D');
+        recc(m,n,x+1,y,s);
+        s.pop_back();
+    }
+    if(check(m,n,x,y-1))
+    {
+        s.push_back('L');
+        recc(m,n,x,y-1,s);
+        s.pop_back();
+    }
+    if(check(m,n,x,y+1))
+    {
+        s.push_back('R');
+        recc(m,n,x,y+1,s);
+        s.pop_back();
+    }
+    if(check(m,n,x-1,y))
+    {
+        s.push_back('U');
+        recc(m,n,x-1,y,s);
+        s.pop_back();
+    }
+    vis[x][y]=0;
+}
+vector<string> findPath(vector<vector<int>> &m, int n)
+{
+    vis=vector<vector<bool>>(n,vector<bool>(n,0));
+    string s;
+    if(m[0][0]==0)
+        return ans;
+    recc(m,n,0,0,s);
+    return ans;
+}
+```
+
+### 6. [Word Break](https://leetcode.com/problems/word-break/)
+
+* Upon some observation it can be observed that if we bulid a recurrsion tree , it is found that from the second edge of the 1st node , the words that are breaking are repeated again.
+* So we can solve this using `DP`.
+* `Brute Force` works by breaking the string in subtring at every point , and if found in the dictionary we split and do the same thing again.
+* `Memeoization` of a later substring can be done using the help of the index from where the string starts.
+
+```cpp
+unordered_set<string> hashSet;
+vector<short> dp;
+bool dynamic(int &n,string &s,int pos)
+{
+    if(pos==n)
+        return 1;
+    if(dp[pos]!=-1)
+        return dp[pos];
+    string temp,wordBreak;
+    bool flag=0;
+    for(int i=pos;i<n;i++)
+    {
+        temp.push_back(s[i]);
+        wordBreak=s.substr(i+1,n-i+1);
+        if(hashSet.find(temp)!=hashSet.end())
+            flag|=dynamic(n,s,i+1);
+    }
+    dp[pos]=flag;
+    return flag;
+}
+bool wordBreak(string s, vector<string>& s1)
+{
+    int n=s1.size();
+    int sz=s.size();
+    dp=vector<short>(sz,-1);
+    for(int i=0;i<n;i++)
+        hashSet.insert(s1[i]);
+    return dynamic(sz,s,0);
+}
+```
