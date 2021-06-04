@@ -39,7 +39,7 @@ void sortColors(vector<int>& nums) {
 * Then we divide all elements of (1-n) and (c[0]-c[n-1]) into 2 groups according to that position of the set bit.
 * Now we have separated both the elements and since we are allowed constant memory , we can do a counter++ for both values.
 
-```
+```cpp
 int findDuplicate(vector<int>& c) 
 {
     int n=c.size();
@@ -91,7 +91,7 @@ int findDuplicate(vector<int>& c)
 * We do this until size of gap = 1.
 * After all this steps the two are sorted.
 
-```
+```cpp
 void merge(long long c1[], long long c2[], int n, int m) 
 { 
     int sz1=n+m;
@@ -147,7 +147,7 @@ void merge(long long c1[], long long c2[], int n, int m)
 * This is very basic DP where we take the sum of the array.
 * While doing so if the sum of the current index is less than the value at the current index , we take the array value as sum at that index.
 
-```
+```cpp
 int maxSubArray(vector<int>& c)
 {
     int n=c.size();
@@ -180,7 +180,7 @@ int maxSubArray(vector<int>& c)
 * Then for all those points we can just take out the maximum right point , then we have a connected interval.
 * Sort The array first and the for finding points use Binary Search.
 
-```
+```cpp
 vector<vector<int>> merge(vector<vector<int>>& c) 
 {
     int n=c.size();
@@ -254,7 +254,7 @@ vector<vector<int>> merge(vector<vector<int>>& c)
 * Now change the position of Fast to `i=0`and the do one step iteration on both Slow and Fast.
 * Again when they strike a common point that index is the answer.
 
-```
+```cpp
 int findDuplicate(vector<int>& c) 
 {
     int n=c.size();
@@ -284,7 +284,7 @@ int findDuplicate(vector<int>& c)
 * Traverse from index 1,1 and on encounter with zero keep marking the dummy array as zero at the index which is required.
 * Then Traverse again from 1,1 and keep making zero according to the index of the dummy array.
 
-```
+```cpp
 void setZeroes(vector<vector<int>>& c) 
 {
     bool col=false,row=false;
@@ -336,7 +336,7 @@ void setZeroes(vector<vector<int>>& c)
 
 * This is based on a simple DP solution which is shown in the diagram of the question.
 
-```
+```cpp
 vector<vector<int>> generate(int n) 
 {
     vector<vector<int>> ans;
@@ -363,7 +363,7 @@ vector<vector<int>> generate(int n)
 * Then we must find the next gretest element from that element in the range of `pointIndex+1 , endPoint`.
 * Swap the two elements and sort the same range mentioned above.
 
-```
+```cpp
 void nextPermutation(vector<int>& c) 
 {
     int n=c.size();
@@ -395,7 +395,7 @@ void nextPermutation(vector<int>& c)
 * Using mergeSort we always get to compare sorted arrays in the merge funtion.
 * Count the inversion globally and return.
 
-```
+```cpp
 vector<long long> left1,right1,merged;
 long long int inversions=0;
 void merge(long long *c)
@@ -469,7 +469,7 @@ long long int inversionCount(long long c[], long long n)
 * Then for every upcoming element we store the maximum difference until an element greater than the max value appears.
 * In this case we update the maximum and proceed as same.
 
-```
+```cpp
 int maxProfit(vector<int>& c)
 {
     int n=c.size();
@@ -503,7 +503,7 @@ int maxProfit(vector<int>& c)
 * This is Medium and the first thought would be a very well implemented recurrsive brute force ,  which I did , but turns out the question was observational
 
 * My Code
-```
+```cpp
 int n;
 void rotation(vector<vector<int>>& c,int pi,int pj,int i,int j,int start,int ending)
 {
@@ -547,7 +547,7 @@ void rotate(vector<vector<int>>& c)
 ```
 * It turns out we just had to reverse the array vertically and swap the diagonal elements.
 * Author's Code
-```
+```cpp
 /*
  * clockwise rotate
  * first reverse up to down, then swap the symmetry 
@@ -587,7 +587,7 @@ void anti_rotate(vector<vector<int> > &matrix) {
 * The solution is pretty intuitive , as we can assume the whole matrix as a single list and perform Binary Search.
 * We just have to manage the indexes when updating left and right.
 
-```
+```cpp
 bool searchMatrix(vector<vector<int>>& c, int target)
 {
     int n=c.size();
@@ -612,7 +612,7 @@ bool searchMatrix(vector<vector<int>>& c, int target)
 * There is a pretty trivial alogorithm which performs **raise to the power** in `log n` time where `n` is the power.
 * If the power is negative then just calculate for the positive power and reciprocate it.
 
-```
+```cpp
 double power(double x,long long n)
 {
     double ans=1;
@@ -641,7 +641,7 @@ double myPow(double x, int n)
 * This idea is when the element is appearing `ceil(n/2)` times then the last element with the positve frequency count will be the answer.
 * Since it is guaranted that the answer exists this always works.
 
-```
+```cpp
 int majorityElement(vector<int>& c) 
 {
     int freq=0,maxEle,i=0;
@@ -666,7 +666,7 @@ int majorityElement(vector<int>& c)
 * Let the first two different elements be assigned as maximums and the freqency decrement of these two element does not affect one another.
 * Do this till the end and lastly when two elements are found , do a final check in the array and return as a vector.
 
-```
+```cpp
 vector<int> majorityElement(vector<int>& c) 
 {
     int n=c.size();
@@ -719,7 +719,7 @@ vector<int> majorityElement(vector<int>& c)
 * Upon Observation it can be seen that the different types of moves are fixed.
 * What we need to do is take permuataion and take care of the repeated moves.
 
-```
+```cpp
 int uniquePaths(int n, int m) 
 {
     int down=n-1;
@@ -754,7 +754,7 @@ int uniquePaths(int n, int m)
 
 * This problem is a slight variation of **Inversion Count** so all the code remains the same just a few lines added.
 
-```
+```cpp
 for(i=0;i<m;i++)
         right2.push_back(1ll*right1[i]*2);
     i=0;
@@ -800,7 +800,7 @@ for(i=0;i<m;i++)
 * You just have to store the elements before the current index in a map.
 * The interative step is just to search the element relatice to target sum inside the map with the current element.
 
-```
+```cpp
 vector<int> twoSum(vector<int>& c, int target)
 {
     int n=c.size();
@@ -827,7 +827,7 @@ vector<int> twoSum(vector<int>& c, int target)
 * Just do a nested double iteration for the first two numbers and then a two pointer sweep for the remaining.
 * Since the array is sorted the two pointer works and we avoid the duplicates.
 
-```
+```cpp
 vector<vector<int> > fourSum(vector<int> &c, int k)
 {
     int n=c.size();
@@ -878,7 +878,7 @@ vector<vector<int> > fourSum(vector<int> &c, int k)
 * For my approach I used a `unordered_map` for **Co-ordinate Compression** and used the compressed number to connect a **DSU**.
 * The largest connected component is the final answer.
 
-```
+```cpp
 unordered_map<int,int> m;
 vector<int> sz,indx;
 int numComponents;
@@ -956,7 +956,7 @@ int longestConsecutive(vector<int>& c)
 * Create the `map` for the elements of the prefix sum and check for repitations and `0`.
 * `0` means the whole subarray from start to that point is contributing to the answer.
 
-```
+```cpp
 int maxLen(int c[], int n)
 {
     map<int,int> m;
@@ -990,7 +990,7 @@ int maxLen(int c[], int n)
 * So if we `xor` all the elements of the two subarray then the answer that remains is the subarray starting from the zero position to just before the starting point for the target xor subarray.
 * Now we just need to store the `xor` of first two subarrays and store the answer in `map` and then iterate with updating xor to match the value of the third subarray that remains.
 
-```
+```cpp
 int countXorSubArray(vector<int>& c,int k)
 {
     int n=c.size();
@@ -1021,7 +1021,7 @@ int countXorSubArray(vector<int>& c,int k)
 * The idea simply is a sliding window whenever we get a repetation of character in the `map`.
 * Then we move the second pointer and delete those values(every value that comes) until we remove the repitation.
 * Then just take max of the window.
-```
+```cpp
 int lengthOfLongestSubstring(string c) 
 {
     int n=c.size();
@@ -1062,7 +1062,7 @@ int lengthOfLongestSubstring(string c)
 ### 1. [Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)
 
 * The idea is pretty simple , its just to have refernce to the next and the previous node and do the reversal operation.
-```
+```cpp
 ListNode* reverseList(ListNode* head) 
 {
     if(head==NULL)
@@ -1089,7 +1089,7 @@ ListNode* reverseList(ListNode* head)
 * Fast moves two steps at a time and slow with one at a time.
 * With some edge case management we can see if the fast hits the last node , we get the middle at the slow pointer.
 
-```
+```cpp
 ListNode* middleNode(ListNode* head) 
 {
     ListNode *slow = head, *fast = head;
@@ -1103,7 +1103,7 @@ ListNode* middleNode(ListNode* head)
 
 * The idea is to take the head pointer as the minimum of the two linked lists and continue with a two pointer of connecting nodes.
 
-```
+```cpp
 Node *merge(Node *head1,Node * head2)
 {
     Node *head,*start;
@@ -1154,7 +1154,7 @@ Node *merge(Node *head1,Node * head2)
 * The idea is again of a fast and slow pointer.
 * By keeping the distance between them as the given postion of deletion , when fast hits the last node , the slow pointer will be at the target node.
 
-```
+```cpp
 ListNode* removeNthFromEnd(ListNode* head, int n) 
 {
     ListNode *fast,*slow;
@@ -1181,7 +1181,7 @@ ListNode* removeNthFromEnd(ListNode* head, int n)
 * Upon some observation it is impossible to delete the node.
 * But it is possible to overwrite values.
 
-```
+```cpp
 void deleteNode(ListNode* node) 
 {
     while(1)
@@ -1201,7 +1201,7 @@ void deleteNode(ListNode* node)
 
 * The idea is to do elementary addition with keeping track of the carry.
 * At the end after addtion if the carry remains it will be also considered.
-```
+```cpp
 struct Node* addTwoLists(struct Node* first, struct Node* second)
 {
     // code here
@@ -1277,7 +1277,7 @@ struct Node* addTwoLists(struct Node* first, struct Node* second)
 * There are two methods to this question , one is to delete all the edges of the first linked list so that the intersection will contain null address , which can be easily found by the second linked list.
 * The second method is to take the difference in length of both lists and bring the head node to a relative equal level according to their sum.
 
-```
+```cpp
 int intersectPoint(Node* head1, Node* head2)
 {
     Node* temp;
@@ -1300,7 +1300,7 @@ int intersectPoint(Node* head1, Node* head2)
 * This problem is implementation heavy and the logic is exactly what's told in the question.
 * My advice will be to draw a diagram of 12 nodes with a division of 4 and try to solve it.
 
-```
+```cpp
 struct node *reverse (struct node *head, int k)
 { 
         
@@ -1344,7 +1344,7 @@ struct node *reverse (struct node *head, int k)
 * The idea is to look for the middle using fast and slow pointers and then reverse the second half of the list.
 * Then the checking for pallindrome is a linear iteration.
 
-```
+```cpp
 bool isPalindrome(ListNode* head) 
 {
     if(!head->next)
@@ -1384,7 +1384,7 @@ bool isPalindrome(ListNode* head)
 * We take the one pointer at the starting point keeping the other idle.
 * Then we traverse both in the assigned direction and when they meet that's the answer.
 
-```
+```cpp
 ListNode *detectCycle(ListNode *head) 
 {
     ListNode *slow=head,*fast=head,*start=head;
@@ -1413,7 +1413,7 @@ ListNode *detectCycle(ListNode *head)
 
 * The idea is to give a recurrsion until the end of the outer list and from there we merge the couple of last lists till the fisrt outer list and empty the recurrsion stack.
 
-```
+```cpp
 Node *merge(Node *head1,Node * head2)
 {
     Node *head,*start;
@@ -1473,7 +1473,7 @@ Node *flatten(Node *root)
 * The question is pretty trivial where you are given an infinite number of rotations and we just `%` the rotations with the size of the list to figure out the effective number of rotations.
 * The Next step is to see that if we rotate `k` times from the end then that's equal to `size-k` times from the start , Since visiting end will always tak more time.
 
-```
+```cpp
 ListNode* rotateRight(ListNode* head, int k) 
 {
     if(!head or !head->next or k==0)
@@ -1513,7 +1513,7 @@ ListNode* rotateRight(ListNode* head, int k)
 * Then assgin the `next` address of the new and old nodes to themselves.
 * Return the address of the first new node.
 
-```
+```cpp
 Node* copyRandomList(Node* head) 
 {
     if(!head)
@@ -1558,7 +1558,7 @@ Node* copyRandomList(Node* head)
 * So the intuition starts as taking two pointers as first and last index and the taking the `fromLeft` and `fromRight` maximun for the answer.
 * Then comparing the element of the 1st and last position which ever is minimum we take that with the difference with its respected maximum.
 
-```
+```cpp
 int trap(vector<int>& c) 
 {
     int n=c.size();
@@ -1588,7 +1588,7 @@ int trap(vector<int>& c)
 
 * This is very trivial , we take a point for editing the numbers and the second pointer for finding the new numbers.
 
-```
+```cpp
 int removeDuplicates(vector<int>& c)
 {
     if(c.empty())
@@ -1621,7 +1621,7 @@ int removeDuplicates(vector<int>& c)
 * So we sort all the range according to the end points and the we give preferance to the starting position.
 * Now we keep track of the previous ended meeting and iterate for the next disjoint starting point.
 
-```
+```cpp
 int maxMeetings(int c1[], int c2[], int n)
 {
     vector<pair<int,int>> p;
@@ -1643,7 +1643,7 @@ int maxMeetings(int c1[], int c2[], int n)
 * The idea is to assign `+1` and `-1` to the starting and ending point and sort them.
 * Then do a prefix sum and take the maximum accordingly.
 
-```
+```cpp
 int findPlatform(int arr[], int dep[], int n)
 {
     vector<pair<int,int>> p;
@@ -1669,7 +1669,7 @@ int findPlatform(int arr[], int dep[], int n)
 * Sort the array according to a comparator following the above rule.
 * Now take the final answer accoring to the input weight.
 
-```
+```cpp
 class cmp
 {
 public:
@@ -1720,7 +1720,7 @@ class Solution
 * The idea is to make two decision for every step , that is either to chose or not not choose the current element.
 * At the end when th eindex reaches to `n` , we store the answer.
 
-```
+```cpp
 vector<int> ans;
 void recc(vector<int> &c,int &n,int i,int sum)
 {
@@ -1747,7 +1747,7 @@ vector<int> subsetSums(vector<int> arr, int N)
 * At first we sort the array for the duplicates to occur together.
 * Then elimination of the dublicates in the recurrsion in very easy since the array is sorted.
 
-```
+```cpp
 vector<vector<int>> ans;
 void subsetFind(vector<int> &c,int x,int n,vector<int> allSet)
 {
@@ -1783,7 +1783,7 @@ vector<vector<int>> subsetsWithDup(vector<int>& c)
 * After this we can , for every element , subtract the multiple of that number in the increasing order of multiplicity.
 * For every multiplicity we subtract the result and send the remaining value to the next element.
 
-```
+```cpp
 vector<vector<int>> ans;
 void combination(vector<int> &c, int x, int sum, vector<int> store)
 {
@@ -1817,7 +1817,7 @@ vector<vector<int>> combinationSum(vector<int>& c, int target)
 
 * Sort the array and upon observing we can notice that , if for every recurrsion call we try all the elements that occur after the previous recurrsio call , then after reaching the end we can always get unique answers.
 
-```
+```cpp
 vector<vector<int>> ans;
 void combination(vector<int> &c, int x,int n, int sum,vector<int> &store)
 {
@@ -1857,7 +1857,7 @@ vector<vector<int>> combinationSum2(vector<int>& c, int target)
 * If it is the we shift both the pointer just above the end of the current string and call the next recurrsion.
 * In the end if we reach the end then we have a answer and we store it.
 
-```
+```cpp
 int n,sz;
 vector<vector<string>> c;
 bool pallin(string &s)
@@ -1907,7 +1907,7 @@ vector<vector<string>> partition(string s)
 * The idea is to see that for every position we can calculate the number that will occur there by the count of the factorial of the elements till that position.
 * After calculating for that position we tranfer the new remainder as the new input to find the number at the next index.
 
-```
+```cpp
 set<int> s;
 vector<int> fact;
 string getPermutation(int n, int k)
@@ -1948,7 +1948,7 @@ string getPermutation(int n, int k)
 
 * The idea is to pick and mrak number as they appear in the array and upon completing the whole recurrsion tree we can get the possible permutations.
 
-```
+```cpp
 int n;
 vector<vector<int>> ans;
 vector<bool> vis;
@@ -1988,7 +1988,7 @@ vector<vector<int>> permute(vector<int>& c)
 * The storing for the row and column is easy now all is left are the recurrsion calls.
 * For evey index put a Queens if possible and move to the next row , after completing for that call erase that queen and proceed to the next column.
 
-```
+```cpp
 vector<bool> visRow,visCol,visUpDiag,visDownDiag;
 vector<vector<string>> ans;
 bool check(int &n,int &row,int &col)
@@ -2034,7 +2034,7 @@ vector<vector<string>> solveNQueens(int n)
 * Keeing track of these will take `O(1)` time to check the validity of the current numbers.
 * Now just place a valid number and call the next recurrsion.
 
-```
+```cpp
 bool visBox[3][3][10],visRow[9][10],visCol[9][10];
 bool done=0;
 vector<vector<char>> ans;
