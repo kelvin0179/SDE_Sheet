@@ -2503,3 +2503,131 @@ long long kthElement(int arr1[], int arr2[], int n, int m, int k)
     return mid;
 }
 ```
+
+# Day_12
+
+### 1. [Inorder Traversal](https://practice.geeksforgeeks.org/problems/inorder-traversal-iterative/0/?fbclid=IwAR2_lL0T84DnciLyzMTQuVTMBOi82nTWNLuXjUgahnrtBgkphKiYk6xcyJU)
+
+* We know to how to the recurrsive traversal.
+* For iterative , the steps we need to vizualise is that for every node we go as left as possible and store every node in a stack.
+* When we no more can go left , then if there exist a right node then we go to it and repeat the 2nd process , else we return back to the stack.
+
+```cpp
+vector<int> inOrder(Node* root)
+{
+    vector<int> ans;
+    stack<Node*> st;
+    while(1)
+    {
+        if(root!=NULL)
+        {
+            st.push(root);
+            root=root->left;
+        }
+        else
+        {
+            if(st.empty())
+                break;
+            ans.push_back(st.top()->data);
+            root=st.top();
+            st.pop();
+            root=root->right;
+        }
+    }
+    return ans;
+}
+```
+
+### 2. [Preorder traversal](https://practice.geeksforgeeks.org/problems/preorder-traversal-iterative/0/)
+
+* This follows the same steps as `inorder` just the pushing step is a little different.
+
+```cpp
+vector<int> preOrder(Node* root)
+{
+    vector<int> ans;
+    stack<Node*> st;
+    while(1)
+    {
+        if(root!=NULL)
+        {
+            ans.push_back(root->data);
+            st.push(root);
+            root=root->left;
+        }
+        else
+        {
+            if(st.empty())
+                break;
+            root=st.top();
+            st.pop();
+            root=root->right;
+        }
+    }
+    return ans;
+}
+```
+
+### 3. [Postorder Traversal](https://practice.geeksforgeeks.org/problems/postorder-traversal-iterative/0/?fbclid=IwAR0hBdYqYX4QO4D0pil25OqEKVDYB6RCEY_ilup_-n5f5cffgv611Rl9HXY)
+
+* This one is a bit tricky because for every node wee need to handle its left and right to print the daaata in the current node.
+* So for the left node we go by the `inorder` push and then after checking the right for `NULL` we return back to the parent node.
+* From the parent node we go right and handle the right node , but when the data of the right subtree is generated we see that just right node is printed last.
+* So we can check that to finally print the parent node.
+
+```cpp
+vector<int> postOrder(Node* root) {
+    vector<int> ans;
+    vector<Node*> temp; 
+    stack<Node*> st;
+    while(1)
+    {
+        if(!root)
+        {
+            if(st.empty())
+                break;
+            if(st.top()->right==NULL or (!temp.empty() and st.top()->right==temp.back()))
+            {
+                ans.push_back(st.top()->data);
+                temp.push_back(st.top());
+                st.pop();
+            }
+            else
+                root=st.top()->right;
+        }
+        else
+        {
+            st.push(root);
+            root=root->left;
+        }
+    }
+    return ans;
+}
+```
+
+### 4. [Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)
+
+* We need two pointers and from them we check the mirror image of the tree.
+
+```cpp
+bool flag=1;
+void recc(TreeNode *root1,TreeNode *root2)
+{
+    if(!root1 and !root2)
+        return;
+    if((!root1 and root2) or (!root2 and root1) or (root1->val!=root2->val))
+    {
+        flag=0;
+        return;
+    }
+    recc(root1->right,root2->left);
+    recc(root1->left,root2->right);
+}
+bool isSymmetric(TreeNode* root)
+{
+    recc(root->left,root->right);
+    return flag;
+}
+```
+
+### 5. []()
