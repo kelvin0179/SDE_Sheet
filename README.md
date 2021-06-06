@@ -2504,7 +2504,7 @@ long long kthElement(int arr1[], int arr2[], int n, int m, int k)
 }
 ```
 
-# Day_12
+# Day_12(Binary_tree)
 
 ### 1. [Inorder Traversal](https://practice.geeksforgeeks.org/problems/inorder-traversal-iterative/0/?fbclid=IwAR2_lL0T84DnciLyzMTQuVTMBOi82nTWNLuXjUgahnrtBgkphKiYk6xcyJU)
 
@@ -2631,3 +2631,318 @@ bool isSymmetric(TreeNode* root)
 ```
 
 ### 5. []()
+
+# Day_13(Dynamic Programming)
+
+### 1. [Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/)
+
+* The idea is to store the minimum and maximum value as we iterate through and reset the values of min and max to 1 when we hit `0`.
+* The reason behind this is so simply pass the max forward and if the min is positive it will remain positive , but if negative , it could turn positive if the current element is negetive.
+* This can effect the next max and min so that the current max becomes min and the previous min becomes -min~max.
+
+```cpp
+int maxProduct(vector<int>& nums)
+{
+    int n=nums.size();
+    vector<int> maxArr(n),minArr(n);
+    maxArr[0]=nums[0],minArr[0]=nums[0];
+    int ma=nums[0];
+    for(int i=1;i<n;i++)
+    {
+        if(nums[i]==0)
+        {
+            minArr[i]=1;
+            maxArr[i]=1;
+            ma=max(ma,nums[i]);
+        }
+        else
+        {
+            minArr[i]=min(nums[i],min(minArr[i-1]*nums[i],maxArr[i-1]*nums[i]));
+            maxArr[i]=max(nums[i],max(minArr[i-1]*nums[i],maxArr[i-1]*nums[i]));
+            ma=max(ma,max(maxArr[i],minArr[i]));
+        }
+    }
+    return ma;
+}
+```
+
+### 2. [Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
+
+* The `n^2` solution will definatly work but there is also a `nlog(n)` solution which works on the basis of selecting the minimum element for a index of the increasing subarray without reducing the size of it.
+* The reason behind this is that replacing the element in between the subarray does not effect its size but it opens up to the possibility of haaving more numbers infront of it , since the replaced element will always be less than the element at that index.
+
+```cpp
+int lengthOfLIS(vector<int> &c)
+{
+    int n=c.size();
+    vector<int> dp;
+    for(int i=0;i<n;i++)
+    {
+        auto it=lower_bound(dp.begin(),dp.end(),c[i]);
+        if(it==dp.end())
+            dp.push_back(c[i]);
+        else
+            dp[it-dp.begin()]=c[i];
+    }
+    n=dp.size();
+    return n;
+}
+```
+
+### 3. [Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
+
+* This is solved by considering 3 possibilities.
+* When both true ++ both , when not , we take 2 remaining possibilites.
+
+```cpp
+int n,m;
+int dyanmic(string &s1,string &s2,vector<vector<int>> &dp,int i,int j,int &n,int &m)
+{
+    if(i==n or j==m)
+        return 0;
+    if(dp[i][j]!=-1)
+        return dp[i][j];
+    if(s1[i]==s2[j])
+        return 1+dyanmic(s1,s2,dp,i+1,j+1,n,m);
+    return dp[i][j]=max(dyanmic(s1,s2,dp,i+1,j,n,m),dyanmic(s1,s2,dp,i,j+1,n,m));
+}
+int longestCommonSubsequence(string s1, string s2)
+{
+    n=s1.size();
+    m=s2.size();
+    vector<vector<int>> dp(n,vector<int>(m,-1));
+    return dyanmic(s1,s2,dp,0,0,n,m);
+}
+```
+
+### 4. [Edit Distance](https://leetcode.com/problems/edit-distance/)
+
+* Inserting a character never is good.
+* Delete from any when required and if both equal then ++ both.
+
+```cpp
+int n,m;
+int dynamic(string &s1,string &s2,int i,int j,vector<vector<int>> &dp)
+{
+    if(j==m)
+        return n-i;
+    if(i==n)
+        return m-j;
+    if(dp[i][j]!=-1)
+        return dp[i][j];
+    if(s1[i]==s2[j])
+        return dp[i][j]=dynamic(s1,s2,i+1,j+1,dp);
+    return dp[i][j]=1+min(dynamic(s1,s2,i+1,j,dp),min(dynamic(s1,s2,i+1,j+1,dp),dynamic(s1,s2,i,j+1,dp)));
+}
+int minDistance(string s1, string s2)
+{
+    n=s1.size();
+    m=s2.size();
+    vector<vector<int>> dp(n,vector<int>(m,-1));
+    return dynamic(s1,s2,0,0,dp);
+}
+```
+
+### 5. [Maximum sum increasing subsequence](https://practice.geeksforgeeks.org/problems/maximum-sum-increasing-subsequence4749/1#)
+
+* The normal `n^2` solution of finding the largest subsequence will be used , just instead of the size of the subsequence , we will store the value of it.
+
+```cpp
+int dynamic(int c[],int dp[],int &n,int x)
+{
+    if(x==n-1)
+        return c[x];
+    if(dp[x]!=-1)
+        return dp[x];
+    dp[x]=c[x];
+    for(int i=x+1;i<n;i++)
+    {
+        if(c[i]>c[x])
+            dp[x]=max(dp[x],c[x]+dynamic(c,dp,n,i));
+    }
+    return dp[x];
+}
+int maxSumIS(int arr[], int n)  
+{  
+    int dp[n];
+    memset(dp,-1,sizeof(dp));
+    int ma=0;
+    for(int i=0;i<n;i++)
+        ma=max(ma,dynamic(arr,dp,n,i));
+    return ma;
+}
+```
+
+### 6. [Matrix Chain Multiplication](https://practice.geeksforgeeks.org/problems/matrix-chain-multiplication0303/1#)
+
+* The problem asks for minimum number of operations that will be performed.
+* So by a formula the logic works `dp[start][end]=dp[start][mid]+dp[mid][end]+(c[start]*c[mid]*c[end])`.
+
+```cpp
+int dynamic(int i,int j,vector<vector<int>> &dp,int c[])
+{
+    if(j-i<=1)
+        return 0;
+    if(dp[i][j]!=-1)
+        return dp[i][j];
+    int mi=1e9;
+    for(int x=i+1;x<=j-1;x++)
+    {
+        mi=min(mi,(c[x]*c[i]*c[j])+dynamic(i,x,dp,c)+dynamic(x,j,dp,c));
+    }
+    return dp[i][j]=mi;
+}
+
+int matrixMultiplication(int N, int arr[])
+{
+    vector<vector<int>> dp(N,vector<int>(N,-1));
+    return dynamic(0,N-1,dp,arr);
+}
+```
+
+### 7. [Maximum path sum in matrix](https://practice.geeksforgeeks.org/problems/path-in-matrix3805/1)
+
+* Pretty Generic path DP problem.
+
+```cpp
+bool check(int &i,int &j,int &n)
+{
+    if(i<0 or j<0 or i==n or j==n)
+        return 0;
+    return 1;
+}
+
+int dynamic(vector<vector<int>> &dp,vector<vector<int>> &c,int i,int j,int &n)
+{
+    if(!check(i,j,n))
+        return 0;
+    if(i==n-1)
+        return c[i][j];
+    if(dp[i][j]!=-1)
+        return dp[i][j];
+    return dp[i][j]=max(c[i][j]+dynamic(dp,c,i+1,j,n),max(c[i][j]+dynamic(dp,c,i+1,j+1,n),c[i][j]+dynamic(dp,c,i+1,j-1,n)));
+}
+
+int maximumPath(int N, vector<vector<int>> Matrix)
+{
+    vector<vector<int>> dp(N,vector<int>(N,-1));
+    int ma=0;
+    for(int i=0;i<N;i++)
+        ma=max(ma,dynamic(dp,Matrix,0,i,N));
+    return ma;
+}
+```
+
+### 8. [Coin Change](https://leetcode.com/problems/coin-change/)
+
+* Same CSES problem.
+
+```cpp
+int coinChange(vector<int>& coins, int amount)
+{
+    int n=coins.size();
+    vector<int> dp(amount+1,1e9);
+    dp[amount]=0;
+    int indx=0;
+    while(indx<n)
+    {
+        for(int i=amount;i-coins[indx]>=0;i--)
+        {
+            dp[i-coins[indx]]=min(dp[i-coins[indx]],1+dp[i]);
+        }
+        indx++;
+    }
+    if(dp[0]==1e9)
+        return -1;
+    return dp[0];
+}
+```
+
+### 9. [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
+
+* We used DFS on this rather than DP.
+
+```cpp
+int sum=0;
+bool flag=0;
+void dynamic(vector<int> &c,vector<vector<bool>> &dp,int &n,int i,int target)
+{
+    if(i==n)
+        return;
+    if(dp[i][target])
+        return;
+    if(sum-target==target)
+        flag=1;
+    dynamic(c,dp,n,i+1,target);
+    dynamic(c,dp,n,i+1,target+c[i]);
+    dp[i][target]=1;
+}
+bool canPartition(vector<int>& c)
+{
+    int n=c.size();
+    for(int i=0;i<n;i++)
+        sum+=c[i];
+    vector<vector<bool>> dp(n,vector<bool>(sum+1,0));
+    dynamic(c,dp,n,0,0);
+    return flag;
+}
+```
+
+### 10. [Rod Cutting](https://practice.geeksforgeeks.org/problems/rod-cutting0840/1)
+
+* For Every Rod we cut we know its current value from the given array , now we just need to find that of the remaining rod left.
+* This can be done using brute force and then storing the value.
+
+```cpp
+int dynamic(int x,int price[],vector<int> &dp)
+{
+    if(x==0)
+        return 0;
+    if(dp[x-1]!=-1)
+        return dp[x-1];
+    int ma=0;
+    for(int i=1;i<=x;i++)
+        ma=max(ma,price[i-1]+dynamic(x-i,price,dp));
+    return dp[x-1]=ma;
+}
+
+int cutRod(int price[], int n)
+{
+    vector<int> dp(n,-1);
+    return dynamic(n,price,dp);
+}
+```
+
+### 11. [Maximum Profit in Job Scheduling](https://leetcode.com/problems/maximum-profit-in-job-scheduling/)
+
+* We sort the given input in a structure such that the ending time and the profit is preferenced.
+* So for every starting time we search for an ending time before and take the max profit forward.
+* Also taking the max profit forword regarless of the mutual exclusive range is also needed.
+
+```cpp
+int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit)
+{
+    vector<vector<int>> c;
+    int n=startTime.size();
+    for(int i=0;i<n;i++)
+    {
+        c.push_back({endTime[i],profit[i],startTime[i]});
+    }    
+    sort(c.begin(),c.end());
+    int ma=0,mx=2e9;
+    for(int i=0;i<n;i++)
+    {
+        vector<int> t={c[i][2],mx,0};
+        auto it=upper_bound(c.begin(),c.end(),t);
+        if(it!=c.begin())
+        {
+            it--;
+            c[i][1]=max(c[i][1],c[i][1]+c[it-c.begin()][1]);
+        }
+        if(i>0)
+            c[i][1]=max(c[i][1],c[i-1][1]);
+        ma=max(ma,c[i][1]);
+    }
+    return ma;
+}
+```
