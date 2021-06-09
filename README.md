@@ -2605,30 +2605,7 @@ vector<int> postOrder(Node* root) {
 }
 ```
 
-### 4. [Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)
 
-* We need two pointers and from them we check the mirror image of the tree.
-
-```cpp
-bool flag=1;
-void recc(TreeNode *root1,TreeNode *root2)
-{
-    if(!root1 and !root2)
-        return;
-    if((!root1 and root2) or (!root2 and root1) or (root1->val!=root2->val))
-    {
-        flag=0;
-        return;
-    }
-    recc(root1->right,root2->left);
-    recc(root1->left,root2->right);
-}
-bool isSymmetric(TreeNode* root)
-{
-    recc(root->left,root->right);
-    return flag;
-}
-```
 
 ### 5. []()
 
@@ -2952,4 +2929,172 @@ int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& pro
 ### 1. [Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
 
 * The idea is  to doa `postorder` traversal to find out the best sum of the left and the right part of a particular node.
-* 
+* The deciding factor for each node would be to compare the left and right added to the root value and also the root value alone and both left and right added to the root value.
+* But from here we have to send something above , for that we will either send the left subtree or the right subtree with the root , but here the problem is the result could still be less than of the root alone , in which case we will onley send the root.
+* In case we have all negative answers , then surely the `sum=0` then we just return the max value in the tree.
+
+```cpp
+int recc(TreeNode *root,int &ma,int &sum)
+{
+    if(!root)
+        return 0;
+    int a=recc(root->left,ma,sum);
+    int b=recc(root->right,ma,sum);
+    sum=max(sum,max(root->val,max(0,max(root->val+a,max(root->val+b,a+b+root->val)))));
+    ma=max(ma,root->val);
+    return max(root->val,max(a+root->val,b+root->val));
+}
+int maxPathSum(TreeNode* root)
+{
+    int ma=-1e9,sum=0;
+    recc(root,ma,sum);
+    if(sum==0)
+        return ma;
+    return sum;
+}
+```
+
+### 2.[Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+
+* The idea is to store the index of all the elements of the inorder array in an `unordered_map`.
+* Then from the preorder array for every number we do a recurrsive `binary_search` in the inorder array to see if the element is on the left or the right subtree.
+
+```cpp
+unordered_map<int,int> m;
+int indx=0;
+TreeNode* recc(vector<int> &pre,vector<int> &in,int l,int r)
+{
+    if(l>r)
+        return NULL;
+    TreeNode *node=new TreeNode(pre[indx]);
+    int mid=m[pre[indx]];
+    indx++;
+    if(l==r)
+        return node;
+    node->left=recc(pre,in,l,mid-1);
+    node->right=recc(pre,in,mid+1,r);
+    return node;
+}
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder)
+{
+    for(int i=0;i<inorder.size();i++)
+        m[inorder[i]]=i;
+    return recc(preorder,inorder,0,preorder.size()-1);
+}
+```
+
+### 3. [Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)
+
+* Since postorder works just like preorder just in a reverse fashion , we can do the same thing just with a little tweak.
+
+```cpp
+unordered_map<int,int> m;
+int indx;
+TreeNode* recc(vector<int> &postorder,vector<int> &inorder,int l,int r)
+{
+    if(l>r)
+        return NULL;
+    TreeNode *node=new TreeNode(postorder[indx]);
+    int mid=m[postorder[indx]];
+    indx--;
+    if(l==r)
+        return node;
+    node->right=recc(postorder,inorder,mid+1,r);
+    node->left=recc(postorder,inorder,l,mid-1);
+    return node;
+}
+TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder)
+{
+    indx=postorder.size()-1;
+    for(int i=0;i<inorder.size();i++)
+        m[inorder[i]]=i;
+    return recc(postorder,inorder,0,postorder.size()-1);
+}
+```
+
+### 4. [Symmetric Tree](https://leetcode.com/problems/symmetric-tree/)
+
+* We need two pointers and from them we check the mirror image of the tree.
+
+```cpp
+bool flag=1;
+void recc(TreeNode *root1,TreeNode *root2)
+{
+    if(!root1 and !root2)
+        return;
+    if((!root1 and root2) or (!root2 and root1) or (root1->val!=root2->val))
+    {
+        flag=0;
+        return;
+    }
+    recc(root1->right,root2->left);
+    recc(root1->left,root2->right);
+}
+bool isSymmetric(TreeNode* root)
+{
+    recc(root->left,root->right);
+    return flag;
+}
+```
+### 5. [Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/)
+
+* So there are 2 Versions to this.
+* This recurrsive version works on the principle that we have to go the the leftest node as possible , while checking that left to that node also should exist.
+* When we find such a node , the left node and the rightest part of the subtree is needed for inserting , which becomes another subproblem.
+
+```cpp
+TreeNode* recc(TreeNode *root)
+{
+    if(!root)
+        return NULL;
+    TreeNode *temp;
+    // cout<<root->val<<endl;
+    if(root->left)
+    {
+        temp=recc(root->left);
+        // cout<<root->val<<endl;
+        temp->right=root->right;
+        root->right=root->left;
+        root->left=NULL;
+        if(temp->right==NULL)
+            return temp;
+        return recc(temp->right);
+    }
+    temp=recc(root->right);
+    if(temp==NULL)
+        return root;
+    return temp;
+}
+void flatten(TreeNode* root)
+{
+    recc(root);
+}
+```
+* The iterative version of the problem uses the same concept of using the left node and the rightest part of that subtree.
+* But instead of going down to the leftest node , it just inserts the closest left node to the rightest subtree.
+
+```cpp
+void flatten(TreeNode *root)
+{
+	TreeNode*now = root;
+	while (now)
+	{
+		if(now->left)
+		{
+            //Find current node's prenode that links to current node's right subtree
+			TreeNode* pre = now->left;
+			while(pre->right)
+			{
+				pre = pre->right;
+			}
+			pre->right = now->right;
+            //Use current node's left subtree to replace its right subtree(original right 
+            //subtree is already linked by current node's prenode
+			now->right = now->left;
+			now->left = NULL;
+		}
+		now = now->right;
+	}
+}
+```
+
