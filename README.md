@@ -2604,10 +2604,112 @@ vector<int> postOrder(Node* root) {
     return ans;
 }
 ```
+### 4. [Left View of Binary Tree](https://practice.geeksforgeeks.org/problems/left-view-of-binary-tree/1#)
 
+* The idea is to mark the height , since we are traversing from the left , the first node to touch a untouched height will be added in the answer.
+```cpp
+unordered_map<int,int> m;
+void recc(vector<int> &ans,Node *root,int ct)
+{
+    if(!root)
+        return;
+    if(m.count(ct)==0)
+    {
+        m.insert({ct,root->data});
+        ans.push_back(root->data);
+    }
+    recc(ans,root->left,ct+1);
+    recc(ans,root->right,ct+1);
+}
+vector<int> leftView(Node *root)
+{
+   // Your code here
+   vector<int> ans;
+   recc(ans,root,0);
+   return ans;
+}
+```
 
+### 5. [Bottom View of Binary Tree](https://practice.geeksforgeeks.org/problems/bottom-view-of-binary-tree/1#)
 
-### 5. []()
+* This can be done using `BFS` or Level Order Traversal , we do it from left to right , discard `nullptr` and update the index each time we encounter.
+
+```cpp
+unordered_map<int,int> m;
+void recc(Node *root,int &ma,int &mi)
+{
+    queue<pair<Node*,int>> q;
+    q.push({root,0});
+    Node *temp;
+    int indx;
+    while(!q.empty())
+    {
+        temp=q.front().first;
+        indx=q.front().second;
+        q.pop();
+        if(!temp)
+            continue;
+        ma=max(ma,indx);
+        mi=min(mi,indx);    
+        q.push({temp->left,indx-1});
+        q.push({temp->right,indx+1});
+        m[indx]=temp->data;
+    }
+}
+//Function to return a list containing the bottom view of the given tree.
+vector <int> bottomView(Node *root)
+{
+    vector<int> ans;
+    int ma=0,mi=1e9;
+    recc(root,ma,mi);
+    for(int i=mi;i<=ma;i++)
+    {
+        ans.push_back(m[i]);
+    }
+    return ans;
+}
+```
+
+### 6. [Top View of Binary Tree](https://practice.geeksforgeeks.org/problems/top-view-of-binary-tree/1)
+
+* Same logic as above but instead the range that will form , the `indx` which is visited will not be updated.
+
+```cpp
+unordered_map<int,int> m;
+void recc(Node *root,int &ma,int &mi)
+{
+    queue<pair<Node*,int>> q;
+    q.push({root,0});
+    Node *temp;
+    int indx;
+    while(!q.empty())
+    {
+        temp=q.front().first;
+        indx=q.front().second;
+        q.pop();
+        if(!temp)
+            continue;
+        ma=max(ma,indx);
+        mi=min(mi,indx);    
+        q.push({temp->left,indx-1});
+        q.push({temp->right,indx+1});
+        if(m.count(indx)==0)
+            m[indx]=temp->data;
+    }
+}
+//Function to return a list containing the bottom view of the given tree.
+vector <int> topView(Node *root)
+{
+    vector<int> ans;
+    int ma=0,mi=1e9;
+    recc(root,ma,mi);
+    for(int i=mi;i<=ma;i++)
+    {
+        ans.push_back(m[i]);
+    }
+    return ans;
+}
+```
 
 # Day_13(Dynamic Programming)
 
@@ -2776,8 +2878,8 @@ int matrixMultiplication(int N, int arr[])
     return dynamic(0,N-1,dp,arr);
 }
 ```
-
-### 7. [Maximum path sum in matrix](https://practice.geeksforgeeks.org/problems/path-in-matrix3805/1)
+# Day_14(DP)
+### 1. [Maximum path sum in matrix](https://practice.geeksforgeeks.org/problems/path-in-matrix3805/1)
 
 * Pretty Generic path DP problem.
 
@@ -2810,7 +2912,7 @@ int maximumPath(int N, vector<vector<int>> Matrix)
 }
 ```
 
-### 8. [Coin Change](https://leetcode.com/problems/coin-change/)
+### 2. [Coin Change](https://leetcode.com/problems/coin-change/)
 
 * Same CSES problem.
 
@@ -2835,7 +2937,7 @@ int coinChange(vector<int>& coins, int amount)
 }
 ```
 
-### 9. [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
+### 3. [Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
 
 * We used DFS on this rather than DP.
 
@@ -2865,7 +2967,7 @@ bool canPartition(vector<int>& c)
 }
 ```
 
-### 10. [Rod Cutting](https://practice.geeksforgeeks.org/problems/rod-cutting0840/1)
+### 4. [Rod Cutting](https://practice.geeksforgeeks.org/problems/rod-cutting0840/1)
 
 * For Every Rod we cut we know its current value from the given array , now we just need to find that of the remaining rod left.
 * This can be done using brute force and then storing the value.
@@ -2890,7 +2992,7 @@ int cutRod(int price[], int n)
 }
 ```
 
-### 11. [Maximum Profit in Job Scheduling](https://leetcode.com/problems/maximum-profit-in-job-scheduling/)
+### 5. [Maximum Profit in Job Scheduling](https://leetcode.com/problems/maximum-profit-in-job-scheduling/)
 
 * We sort the given input in a structure such that the ending time and the profit is preferenced.
 * So for every starting time we search for an ending time before and take the max profit forward.
@@ -2924,7 +3026,7 @@ int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& pro
 }
 ```
 
-# Day_14(Binary Tree)
+# Day_15(Binary Tree)
 
 ### 1. [Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
 
