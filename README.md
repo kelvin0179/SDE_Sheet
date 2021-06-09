@@ -2946,3 +2946,10 @@ int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& pro
     return ma;
 }
 ```
+
+# Day_14(Binary Tree)
+
+### 1. [Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+
+* The idea is  to doa `postorder` traversal to find out the best sum of the left and the right part of a particular node.
+* 
