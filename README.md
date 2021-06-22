@@ -3199,4 +3199,98 @@ void flatten(TreeNode *root)
 	}
 }
 ```
+# Day_16
+
+### 1. [Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+
+* The idea is to go down the tree and keep track of every node in a `Preorder` Manner.
+```cpp
+void dfs(TreeNode *root,int &ma,int ct)
+{
+    if(!root)
+        return;
+    ma=max(ma,ct);
+    dfs(root->left,ma,ct+1);
+    dfs(root->right,ma,ct+1);
+}
+int maxDepth(TreeNode* root)
+{
+    int ma=0;
+    dfs(root,ma,1);
+    return ma;
+}
+```
+
+### 2. [Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)
+
+* The idea is to do a `Postorder` traversal to calculate the length of the downer nodes first.
+* As we go up the tree , for every node we comapre the `max` with its left and right subtree and update the max according to it.
+* The value we send above is the max lenght between the two subtrees including the current node.
+
+```cpp
+int recc(TreeNode *root,int &ma)
+{
+    if(!root)
+        return 0;
+    int a=recc(root->left,ma);
+    int b=recc(root->right,ma);
+    ma=max(ma,a+b);
+    return max(a,b)+1;
+}
+int diameterOfBinaryTree(TreeNode* root) 
+{
+    int ma=0;
+    recc(root,ma);
+    return ma;
+}
+```
+
+### 3. [Check for Balanced Tree](https://practice.geeksforgeeks.org/problems/check-for-balanced-tree/1)
+
+* The idea is to do a `Postorder` traversal to calculate the length of the downer nodes first.
+* As we go up the tree we compare the length of the max left and right subtree.
+
+```cpp
+int recc(Node *root,bool &flag,int ct)
+{
+    if(!root)
+        return ct;
+    int a=recc(root->left,flag,ct+1);
+    int b=recc(root->right,flag,ct+1);
+    // cout<<a<<" "<<b<<" "<<root->data<<endl;
+    if(abs(a-b)>1)
+        flag=0;
+    return max(a,b);
+}
+bool isBalanced(Node *root)
+{
+    bool flag=1;
+    recc(root,flag,0);
+    return flag;
+}
+```
+
+### 4. [Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+
+* The idea is `Postorder` and to just return the target node and `NULL` for everything else.
+* Then the `LCA` will be the only node who will be recieving two `NOT-NULL` nodes from left and right subtree.
+* Going all the way upto the root one subtree will carry the `LCA` and other will be `NULL` , except when the `root` is the `LCA`.
+
+```cpp
+TreeNode * dfsTraverse(TreeNode * root, TreeNode * p , TreeNode * q)
+{
+    if( root == p || root == q || root == NULL)
+        return root;
+    TreeNode * parent1 = dfsTraverse(root->left, p, q);
+    TreeNode * parent2 = dfsTraverse(root->right, p, q);
+    if( parent1 && parent2)
+        return root;
+    else
+        return parent1 ? parent1:parent2;
+}
+TreeNode * lowestCommonAncestor(TreeNode * root, TreeNode * p, TreeNode * q)
+{
+    return dfsTraverse(root, p, q);
+}
+```
 
